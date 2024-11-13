@@ -6,11 +6,7 @@ const config: CodegenConfig = {
   generates: {
     "./gql/": {
       preset: "client",
-      plugins: [
-        "typescript",
-        "typescript-operations",
-        "typescript-react-apollo",
-      ],
+      plugins: [],
       config: {
         withHooks: true,
         withHOC: false,

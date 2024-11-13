@@ -64,7 +64,7 @@ const CreateSpeakingRoom = React.memo(() => {
     try {
       await createSpeakingRoom({
         variables: {
-          createSpeakingRoomDto: {
+          createChannelDto: {
             name: values.name,
             level: values.level.value,
             language: values.language.value,

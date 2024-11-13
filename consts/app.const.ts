@@ -49,4 +49,18 @@ export const authOptions: NextAuthOptions = {
             }
         },
     },
+    callbacks: {
+        async signIn({ user }) {
+            if (user) {
+                try {
+
+                } catch (error) {
+                    console.log(error);
+                }
+                return true
+            } else {
+                return false;
+            }
+        },
+    }
 };
