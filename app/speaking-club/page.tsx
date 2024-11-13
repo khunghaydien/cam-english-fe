@@ -1,3 +1,4 @@
+import MainLayout from "@/components/layout/main-layout";
 import dynamic from "next/dynamic";
 import React from "react";
 import { ImSpinner2 } from "react-icons/im";
@@ -11,11 +12,16 @@ const SpeakingClub = dynamic(
         <ImSpinner2 className="animate-spin text-primary w-12 h-12" />
       </div>
     ),
+    suspense: true,
   }
 );
 
-function Page() {
-  return <SpeakingClub />;
+function page() {
+  return (
+    <MainLayout>
+      <SpeakingClub />
+    </MainLayout>
+  );
 }
 
-export default Page;
+export default page;
