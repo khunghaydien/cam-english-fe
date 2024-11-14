@@ -12,8 +12,8 @@ import Select from "@/components/ui/select";
 import { CREATE_CHANNEL } from "@/graphql/mutation/channel";
 import { useFormik } from "formik";
 import { scrollToFirstElement } from "@/components/utils";
-import { useGenerateOption } from "./generate-option";
 import { createChannelValidation } from "./validation";
+import { useGenerateOption } from "../speaking-club.const";
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -77,7 +77,13 @@ const CreateSpeakingRoom = React.memo(() => {
 
   return (
     <React.Fragment>
-      <Button variant="contained" onClick={handleClickOpen}>
+      <Button
+        variant="contained"
+        onClick={handleClickOpen}
+        sx={{
+          minWidth: "141px",
+        }}
+      >
         Create Channel
       </Button>
       <Dialog

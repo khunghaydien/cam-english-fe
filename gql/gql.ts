@@ -16,6 +16,7 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
 const documents = {
     "\n  mutation CreateChannel($createChannelDto: CreateChannelDto!) {\n    createChannel(createChannelDto: $createChannelDto) {\n      id\n      name\n      level\n      language\n      host {\n        id\n        name\n        image\n        email\n      }\n    }\n  }\n": types.CreateChannelDocument,
     "\n  mutation SignUpByGoogle($signUpByGoogleDto: SignUpByGoogleDto!) {\n    signUpByGoogle(signUpByGoogleDto: $signUpByGoogleDto) {\n      id\n      name\n      email\n      image\n    }\n  }\n": types.SignUpByGoogleDocument,
+    "\n  query getChannel(\n    $filterChannelDto: FilterChannelDto,\n    $paginationDto: PaginationDto,\n    $orderByDto: OrderByDto\n  ) {\n    getChannel(\n      filterChannelDto: $filterChannelDto,\n      paginationDto: $paginationDto,\n      orderByDto: $orderByDto\n    ) {\n      data{\n        id\n        name\n        level\n        type\n        language\n      }  \n      pagination{\n        currentPage\n        pageSize\n        totalElements\n        totalPages\n      }\n    }\n  }\n": types.GetChannelDocument,
 };
 
 /**
@@ -40,6 +41,10 @@ export function graphql(source: "\n  mutation CreateChannel($createChannelDto: C
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n  mutation SignUpByGoogle($signUpByGoogleDto: SignUpByGoogleDto!) {\n    signUpByGoogle(signUpByGoogleDto: $signUpByGoogleDto) {\n      id\n      name\n      email\n      image\n    }\n  }\n"): (typeof documents)["\n  mutation SignUpByGoogle($signUpByGoogleDto: SignUpByGoogleDto!) {\n    signUpByGoogle(signUpByGoogleDto: $signUpByGoogleDto) {\n      id\n      name\n      email\n      image\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  query getChannel(\n    $filterChannelDto: FilterChannelDto,\n    $paginationDto: PaginationDto,\n    $orderByDto: OrderByDto\n  ) {\n    getChannel(\n      filterChannelDto: $filterChannelDto,\n      paginationDto: $paginationDto,\n      orderByDto: $orderByDto\n    ) {\n      data{\n        id\n        name\n        level\n        type\n        language\n      }  \n      pagination{\n        currentPage\n        pageSize\n        totalElements\n        totalPages\n      }\n    }\n  }\n"): (typeof documents)["\n  query getChannel(\n    $filterChannelDto: FilterChannelDto,\n    $paginationDto: PaginationDto,\n    $orderByDto: OrderByDto\n  ) {\n    getChannel(\n      filterChannelDto: $filterChannelDto,\n      paginationDto: $paginationDto,\n      orderByDto: $orderByDto\n    ) {\n      data{\n        id\n        name\n        level\n        type\n        language\n      }  \n      pagination{\n        currentPage\n        pageSize\n        totalElements\n        totalPages\n      }\n    }\n  }\n"];
 
 export function graphql(source: string) {
   return (documents as any)[source] ?? {};

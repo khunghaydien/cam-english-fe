@@ -65,10 +65,10 @@ export const authOptions: NextAuthOptions = {
                             },
                         },
                     });
+                    return true
                 } catch (error) {
-                    console.log(error);
+                    return false
                 }
-                return true
             } else {
                 return false;
             }

@@ -29,6 +29,13 @@ export type Channel = {
   name?: Maybe<Scalars['String']['output']>;
   type?: Maybe<Scalars['String']['output']>;
   updatedAt?: Maybe<Scalars['DateTime']['output']>;
+  userChannel?: Maybe<Array<UserChannel>>;
+};
+
+export type Channels = {
+  __typename?: 'Channels';
+  data: Array<Channel>;
+  pagination: Pagination;
 };
 
 export type CreateChannelDto = {
@@ -36,6 +43,13 @@ export type CreateChannelDto = {
   level: Scalars['String']['input'];
   name: Scalars['String']['input'];
   type: Scalars['String']['input'];
+};
+
+export type FilterChannelDto = {
+  language?: InputMaybe<Scalars['String']['input']>;
+  level?: InputMaybe<Scalars['String']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  type?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type Mutation = {
@@ -60,9 +74,36 @@ export type MutationSignUpByGoogleArgs = {
   signUpByGoogleDto: SignUpByGoogleDto;
 };
 
+export type OrderByDto = {
+  field?: InputMaybe<Scalars['String']['input']>;
+  order?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type Pagination = {
+  __typename?: 'Pagination';
+  currentPage: Scalars['Float']['output'];
+  pageSize: Scalars['Float']['output'];
+  totalElements: Scalars['Float']['output'];
+  totalPages: Scalars['Float']['output'];
+};
+
+export type PaginationDto = {
+  initial?: InputMaybe<Scalars['Float']['input']>;
+  page?: InputMaybe<Scalars['Float']['input']>;
+  pageSize?: InputMaybe<Scalars['Float']['input']>;
+};
+
 export type Query = {
   __typename?: 'Query';
+  getChannel?: Maybe<Channels>;
   hello: Scalars['String']['output'];
+};
+
+
+export type QueryGetChannelArgs = {
+  filterChannelDto?: InputMaybe<FilterChannelDto>;
+  orderByDto?: InputMaybe<OrderByDto>;
+  paginationDto?: InputMaybe<PaginationDto>;
 };
 
 export type SignUpByGoogleDto = {
@@ -85,6 +126,16 @@ export type User = {
   id: Scalars['String']['output'];
   image?: Maybe<Scalars['String']['output']>;
   name: Scalars['String']['output'];
+  role?: Maybe<Scalars['String']['output']>;
+};
+
+export type UserChannel = {
+  __typename?: 'UserChannel';
+  channel?: Maybe<Channel>;
+  channelId?: Maybe<Scalars['String']['output']>;
+  id: Scalars['String']['output'];
+  participant?: Maybe<User>;
+  participantId?: Maybe<Scalars['String']['output']>;
 };
 
 export type CreateChannelMutationVariables = Exact<{
@@ -101,6 +152,16 @@ export type SignUpByGoogleMutationVariables = Exact<{
 
 export type SignUpByGoogleMutation = { __typename?: 'Mutation', signUpByGoogle?: { __typename?: 'User', id: string, name: string, email?: string | null, image?: string | null } | null };
 
+export type GetChannelQueryVariables = Exact<{
+  filterChannelDto?: InputMaybe<FilterChannelDto>;
+  paginationDto?: InputMaybe<PaginationDto>;
+  orderByDto?: InputMaybe<OrderByDto>;
+}>;
+
+
+export type GetChannelQuery = { __typename?: 'Query', getChannel?: { __typename?: 'Channels', data: Array<{ __typename?: 'Channel', id: string, name?: string | null, level?: string | null, type?: string | null, language?: string | null }>, pagination: { __typename?: 'Pagination', currentPage: number, pageSize: number, totalElements: number, totalPages: number } } | null };
+
 
 export const CreateChannelDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateChannel"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"createChannelDto"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"CreateChannelDto"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createChannel"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"createChannelDto"},"value":{"kind":"Variable","name":{"kind":"Name","value":"createChannelDto"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"level"}},{"kind":"Field","name":{"kind":"Name","value":"language"}},{"kind":"Field","name":{"kind":"Name","value":"host"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"image"}},{"kind":"Field","name":{"kind":"Name","value":"email"}}]}}]}}]}}]} as unknown as DocumentNode<CreateChannelMutation, CreateChannelMutationVariables>;
 export const SignUpByGoogleDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"SignUpByGoogle"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"signUpByGoogleDto"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"SignUpByGoogleDto"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"signUpByGoogle"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"signUpByGoogleDto"},"value":{"kind":"Variable","name":{"kind":"Name","value":"signUpByGoogleDto"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"image"}}]}}]}}]} as unknown as DocumentNode<SignUpByGoogleMutation, SignUpByGoogleMutationVariables>;
+export const GetChannelDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getChannel"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"filterChannelDto"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"FilterChannelDto"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"paginationDto"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"PaginationDto"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"orderByDto"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"OrderByDto"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getChannel"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"filterChannelDto"},"value":{"kind":"Variable","name":{"kind":"Name","value":"filterChannelDto"}}},{"kind":"Argument","name":{"kind":"Name","value":"paginationDto"},"value":{"kind":"Variable","name":{"kind":"Name","value":"paginationDto"}}},{"kind":"Argument","name":{"kind":"Name","value":"orderByDto"},"value":{"kind":"Variable","name":{"kind":"Name","value":"orderByDto"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"data"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"level"}},{"kind":"Field","name":{"kind":"Name","value":"type"}},{"kind":"Field","name":{"kind":"Name","value":"language"}}]}},{"kind":"Field","name":{"kind":"Name","value":"pagination"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"currentPage"}},{"kind":"Field","name":{"kind":"Name","value":"pageSize"}},{"kind":"Field","name":{"kind":"Name","value":"totalElements"}},{"kind":"Field","name":{"kind":"Name","value":"totalPages"}}]}}]}}]}}]} as unknown as DocumentNode<GetChannelQuery, GetChannelQueryVariables>;
