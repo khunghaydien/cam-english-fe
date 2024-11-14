@@ -1,6 +1,8 @@
 import { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import jwt, { JwtPayload } from "jsonwebtoken";
+import { SIGN_UP_BY_GOOGLE } from "@/graphql/mutation/user";
+import { client } from "@/providers/apollo-provider/client";
 
 declare module "next-auth" {
     interface JWT {
@@ -53,7 +55,16 @@ export const authOptions: NextAuthOptions = {
         async signIn({ user }) {
             if (user) {
                 try {
-
+                    await client.mutate({
+                        mutation: SIGN_UP_BY_GOOGLE,
+                        variables: {
+                            signUpByGoogleDto: {
+                                name: user.name,
+                                email: user.email,
+                                image: user.image,
+                            },
+                        },
+                    });
                 } catch (error) {
                     console.log(error);
                 }

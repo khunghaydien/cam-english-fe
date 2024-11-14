@@ -15,6 +15,7 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  */
 const documents = {
     "\n  mutation CreateChannel($createChannelDto: CreateChannelDto!) {\n    createChannel(createChannelDto: $createChannelDto) {\n      id\n      name\n      level\n      language\n      host {\n        id\n        name\n        image\n        email\n      }\n    }\n  }\n": types.CreateChannelDocument,
+    "\n  mutation SignUpByGoogle($signUpByGoogleDto: SignUpByGoogleDto!) {\n    signUpByGoogle(signUpByGoogleDto: $signUpByGoogleDto) {\n      id\n      name\n      email\n      image\n    }\n  }\n": types.SignUpByGoogleDocument,
 };
 
 /**
@@ -35,6 +36,10 @@ export function graphql(source: string): unknown;
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n  mutation CreateChannel($createChannelDto: CreateChannelDto!) {\n    createChannel(createChannelDto: $createChannelDto) {\n      id\n      name\n      level\n      language\n      host {\n        id\n        name\n        image\n        email\n      }\n    }\n  }\n"): (typeof documents)["\n  mutation CreateChannel($createChannelDto: CreateChannelDto!) {\n    createChannel(createChannelDto: $createChannelDto) {\n      id\n      name\n      level\n      language\n      host {\n        id\n        name\n        image\n        email\n      }\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation SignUpByGoogle($signUpByGoogleDto: SignUpByGoogleDto!) {\n    signUpByGoogle(signUpByGoogleDto: $signUpByGoogleDto) {\n      id\n      name\n      email\n      image\n    }\n  }\n"): (typeof documents)["\n  mutation SignUpByGoogle($signUpByGoogleDto: SignUpByGoogleDto!) {\n    signUpByGoogle(signUpByGoogleDto: $signUpByGoogleDto) {\n      id\n      name\n      email\n      image\n    }\n  }\n"];
 
 export function graphql(source: string) {
   return (documents as any)[source] ?? {};

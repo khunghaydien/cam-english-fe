@@ -1,8 +1,11 @@
 import { gql } from "@apollo/client";
-export const CREATE_USER = gql`
-  mutation CreateUser($createUserDto: CreateUserDto!) {
-    createUser(createUserDto: $createUserDto) {
+export const SIGN_UP_BY_GOOGLE = gql`
+  mutation SignUpByGoogle($signUpByGoogleDto: SignUpByGoogleDto!) {
+    signUpByGoogle(signUpByGoogleDto: $signUpByGoogleDto) {
       id
+      name
+      email
+      image
     }
   }
 `;
