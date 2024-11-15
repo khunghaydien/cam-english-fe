@@ -1,3 +1,4 @@
+"use client";
 import * as React from "react";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
@@ -9,11 +10,12 @@ import NextImage from "next/image";
 import { useMutation } from "@apollo/client";
 import Input from "@/components/ui/input";
 import Select from "@/components/ui/select";
-import { CREATE_CHANNEL } from "@/graphql/mutation/channel";
+import { CREATE_CHANNEL } from "@/graphql/mutation/speaking-club";
 import { useFormik } from "formik";
 import { scrollToFirstElement } from "@/components/utils";
 import { createChannelValidation } from "./validation";
 import { useGenerateOption } from "../speaking-club.const";
+import { useRouter } from "next/navigation";
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -25,9 +27,9 @@ const Transition = React.forwardRef(function Transition(
 });
 
 const CreateSpeakingRoom = React.memo(() => {
+  const router = useRouter();
   const { levelOptions, typeOptions, languageOptions } = useGenerateOption();
   const [open, setOpen] = React.useState(false);
-
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -58,11 +60,11 @@ const CreateSpeakingRoom = React.memo(() => {
     setFieldValue(keyname, value);
   };
 
-  const [createSpeakingRoom] = useMutation(CREATE_CHANNEL);
+  const [createChannel] = useMutation(CREATE_CHANNEL);
 
   const handleSubmit = async (values: any) => {
     try {
-      await createSpeakingRoom({
+      const res = await createChannel({
         variables: {
           createChannelDto: {
             name: values.name,
@@ -72,7 +74,11 @@ const CreateSpeakingRoom = React.memo(() => {
           },
         },
       });
-    } catch (error) {}
+      router.push(`/speaking-club/${res?.data?.createChannel?.id}`);
+    } catch (error) {
+    } finally {
+      handleClose();
+    }
   };
 
   return (

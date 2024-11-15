@@ -15,7 +15,7 @@ function page() {
       suspense: true,
     }
   );
-  return <Channel></Channel>;
+  return <Channel />;
 }
 
 export default page;

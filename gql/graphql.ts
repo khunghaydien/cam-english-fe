@@ -32,12 +32,6 @@ export type Channel = {
   userChannel?: Maybe<Array<UserChannel>>;
 };
 
-export type Channels = {
-  __typename?: 'Channels';
-  data: Array<Channel>;
-  pagination: Pagination;
-};
-
 export type CreateChannelDto = {
   language: Scalars['String']['input'];
   level: Scalars['String']['input'];
@@ -45,11 +39,15 @@ export type CreateChannelDto = {
   type: Scalars['String']['input'];
 };
 
-export type FilterChannelDto = {
+export type FilterSpeakingClubDto = {
   language?: InputMaybe<Scalars['String']['input']>;
   level?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
   type?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type GetChannelDto = {
+  id: Scalars['String']['input'];
 };
 
 export type Mutation = {
@@ -95,13 +93,19 @@ export type PaginationDto = {
 
 export type Query = {
   __typename?: 'Query';
-  getChannel?: Maybe<Channels>;
+  getChannel?: Maybe<Channel>;
+  getSpeakingClub?: Maybe<SpeakingClub>;
   hello: Scalars['String']['output'];
 };
 
 
 export type QueryGetChannelArgs = {
-  filterChannelDto?: InputMaybe<FilterChannelDto>;
+  getChannelDto?: InputMaybe<GetChannelDto>;
+};
+
+
+export type QueryGetSpeakingClubArgs = {
+  filterSpeakingClubDto?: InputMaybe<FilterSpeakingClubDto>;
   orderByDto?: InputMaybe<OrderByDto>;
   paginationDto?: InputMaybe<PaginationDto>;
 };
@@ -118,6 +122,12 @@ export type SignUpDto = {
   image?: InputMaybe<Scalars['String']['input']>;
   name: Scalars['String']['input'];
   password?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type SpeakingClub = {
+  __typename?: 'SpeakingClub';
+  data: Array<Channel>;
+  pagination: Pagination;
 };
 
 export type User = {
@@ -152,16 +162,24 @@ export type SignUpByGoogleMutationVariables = Exact<{
 
 export type SignUpByGoogleMutation = { __typename?: 'Mutation', signUpByGoogle?: { __typename?: 'User', id: string, name: string, email?: string | null, image?: string | null } | null };
 
-export type GetChannelQueryVariables = Exact<{
-  filterChannelDto?: InputMaybe<FilterChannelDto>;
+export type GetSpeakingClubQueryVariables = Exact<{
+  filterSpeakingClubDto?: InputMaybe<FilterSpeakingClubDto>;
   paginationDto?: InputMaybe<PaginationDto>;
   orderByDto?: InputMaybe<OrderByDto>;
 }>;
 
 
-export type GetChannelQuery = { __typename?: 'Query', getChannel?: { __typename?: 'Channels', data: Array<{ __typename?: 'Channel', id: string, name?: string | null, level?: string | null, type?: string | null, language?: string | null }>, pagination: { __typename?: 'Pagination', currentPage: number, pageSize: number, totalElements: number, totalPages: number } } | null };
+export type GetSpeakingClubQuery = { __typename?: 'Query', getSpeakingClub?: { __typename?: 'SpeakingClub', data: Array<{ __typename?: 'Channel', id: string, name?: string | null, level?: string | null, type?: string | null, language?: string | null }>, pagination: { __typename?: 'Pagination', currentPage: number, pageSize: number, totalElements: number, totalPages: number } } | null };
+
+export type GetChannelQueryVariables = Exact<{
+  getChannelDto?: InputMaybe<GetChannelDto>;
+}>;
+
+
+export type GetChannelQuery = { __typename?: 'Query', getChannel?: { __typename?: 'Channel', id: string, name?: string | null, level?: string | null, type?: string | null, language?: string | null, host?: { __typename?: 'User', email?: string | null } | null } | null };
 
 
 export const CreateChannelDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateChannel"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"createChannelDto"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"CreateChannelDto"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createChannel"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"createChannelDto"},"value":{"kind":"Variable","name":{"kind":"Name","value":"createChannelDto"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"level"}},{"kind":"Field","name":{"kind":"Name","value":"language"}},{"kind":"Field","name":{"kind":"Name","value":"host"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"image"}},{"kind":"Field","name":{"kind":"Name","value":"email"}}]}}]}}]}}]} as unknown as DocumentNode<CreateChannelMutation, CreateChannelMutationVariables>;
 export const SignUpByGoogleDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"SignUpByGoogle"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"signUpByGoogleDto"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"SignUpByGoogleDto"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"signUpByGoogle"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"signUpByGoogleDto"},"value":{"kind":"Variable","name":{"kind":"Name","value":"signUpByGoogleDto"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"image"}}]}}]}}]} as unknown as DocumentNode<SignUpByGoogleMutation, SignUpByGoogleMutationVariables>;
-export const GetChannelDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getChannel"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"filterChannelDto"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"FilterChannelDto"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"paginationDto"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"PaginationDto"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"orderByDto"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"OrderByDto"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getChannel"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"filterChannelDto"},"value":{"kind":"Variable","name":{"kind":"Name","value":"filterChannelDto"}}},{"kind":"Argument","name":{"kind":"Name","value":"paginationDto"},"value":{"kind":"Variable","name":{"kind":"Name","value":"paginationDto"}}},{"kind":"Argument","name":{"kind":"Name","value":"orderByDto"},"value":{"kind":"Variable","name":{"kind":"Name","value":"orderByDto"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"data"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"level"}},{"kind":"Field","name":{"kind":"Name","value":"type"}},{"kind":"Field","name":{"kind":"Name","value":"language"}}]}},{"kind":"Field","name":{"kind":"Name","value":"pagination"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"currentPage"}},{"kind":"Field","name":{"kind":"Name","value":"pageSize"}},{"kind":"Field","name":{"kind":"Name","value":"totalElements"}},{"kind":"Field","name":{"kind":"Name","value":"totalPages"}}]}}]}}]}}]} as unknown as DocumentNode<GetChannelQuery, GetChannelQueryVariables>;
+export const GetSpeakingClubDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetSpeakingClub"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"filterSpeakingClubDto"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"FilterSpeakingClubDto"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"paginationDto"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"PaginationDto"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"orderByDto"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"OrderByDto"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getSpeakingClub"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"filterSpeakingClubDto"},"value":{"kind":"Variable","name":{"kind":"Name","value":"filterSpeakingClubDto"}}},{"kind":"Argument","name":{"kind":"Name","value":"paginationDto"},"value":{"kind":"Variable","name":{"kind":"Name","value":"paginationDto"}}},{"kind":"Argument","name":{"kind":"Name","value":"orderByDto"},"value":{"kind":"Variable","name":{"kind":"Name","value":"orderByDto"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"data"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"level"}},{"kind":"Field","name":{"kind":"Name","value":"type"}},{"kind":"Field","name":{"kind":"Name","value":"language"}}]}},{"kind":"Field","name":{"kind":"Name","value":"pagination"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"currentPage"}},{"kind":"Field","name":{"kind":"Name","value":"pageSize"}},{"kind":"Field","name":{"kind":"Name","value":"totalElements"}},{"kind":"Field","name":{"kind":"Name","value":"totalPages"}}]}}]}}]}}]} as unknown as DocumentNode<GetSpeakingClubQuery, GetSpeakingClubQueryVariables>;
+export const GetChannelDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetChannel"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"getChannelDto"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"GetChannelDto"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getChannel"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"getChannelDto"},"value":{"kind":"Variable","name":{"kind":"Name","value":"getChannelDto"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"level"}},{"kind":"Field","name":{"kind":"Name","value":"type"}},{"kind":"Field","name":{"kind":"Name","value":"language"}},{"kind":"Field","name":{"kind":"Name","value":"host"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"email"}}]}}]}}]}}]} as unknown as DocumentNode<GetChannelQuery, GetChannelQueryVariables>;

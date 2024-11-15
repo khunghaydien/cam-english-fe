@@ -17,7 +17,7 @@ function MainLayout({ children }: { children: ReactNode }) {
   return (
     <div className="flex-grow h-full flex flex-col">
       <div className="flex items-center justify-center">
-        <header className="flex items-center justify-between gap-12 py-3 flex-grow max-w-[1400px]">
+        <header className="flex items-center justify-between gap-12 py-3 px-6 flex-grow max-w-[1400px]">
           <div className="font-bold text-3xl bg-gradient-to-r from-blue-400 to-violet-900 text-transparent bg-clip-text hover:cursor-pointer">
             Cam's English
           </div>
@@ -41,7 +41,7 @@ function MainLayout({ children }: { children: ReactNode }) {
       </div>
       <div className="bg-muted-foreground h-[0.5px]"></div>
       <div className="flex items-center justify-center">
-        <div className="flex items-center justify-between gap-12 py-6 flex-grow max-w-[1400px]">
+        <div className="flex items-center justify-between gap-12 py-6 px-6 flex-grow max-w-[1400px]">
           <div className="w-full">{children}</div>
         </div>
       </div>
