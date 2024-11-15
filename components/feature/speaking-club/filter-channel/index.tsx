@@ -5,7 +5,7 @@ import React from "react";
 import TuneTwoToneIcon from "@mui/icons-material/TuneTwoTone";
 import { useGenerateOption } from "../speaking-club.const";
 
-function FilterChannel() {
+function index() {
   const { levelOptions, typeOptions, languageOptions } = useGenerateOption();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -130,4 +130,4 @@ function FilterChannel() {
   );
 }
 
-export default FilterChannel;
+export default index;

@@ -47,15 +47,15 @@ function SwitchTheme() {
       </div>
       <div className="w-full pl-12 mb-2">
         <MenuItem
-          onClick={() => setTheme(objectTheme.light.value)}
-          selected={theme === objectTheme.light.value}
+          onClick={() => setTheme(objectTheme.dark.value)}
+          selected={theme === objectTheme.dark.value}
         >
           On
         </MenuItem>
 
         <MenuItem
-          onClick={() => setTheme(objectTheme.dark.value)}
-          selected={theme === objectTheme.dark.value}
+          onClick={() => setTheme(objectTheme.light.value)}
+          selected={theme === objectTheme.light.value}
         >
           Off
         </MenuItem>
