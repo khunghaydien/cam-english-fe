@@ -18,58 +18,57 @@ export type Scalars = {
   DateTime: { input: any; output: any; }
 };
 
-export type Channel = {
-  __typename?: 'Channel';
-  createdAt?: Maybe<Scalars['DateTime']['output']>;
-  host?: Maybe<User>;
-  hostId?: Maybe<Scalars['String']['output']>;
-  id: Scalars['String']['output'];
-  language?: Maybe<Scalars['String']['output']>;
-  level?: Maybe<Scalars['String']['output']>;
-  name?: Maybe<Scalars['String']['output']>;
-  type?: Maybe<Scalars['String']['output']>;
-  updatedAt?: Maybe<Scalars['DateTime']['output']>;
-  userChannel?: Maybe<Array<UserChannel>>;
-};
-
-export type CreateChannelDto = {
+export type CreateSpeakingRoomDto = {
   language: Scalars['String']['input'];
   level: Scalars['String']['input'];
   name: Scalars['String']['input'];
   type: Scalars['String']['input'];
 };
 
-export type FilterSpeakingClubDto = {
+export type CreateUserDto = {
+  email: Scalars['String']['input'];
+  image?: InputMaybe<Scalars['String']['input']>;
+  name: Scalars['String']['input'];
+  password?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type FilterSpeakingRoomDto = {
   language?: InputMaybe<Scalars['String']['input']>;
   level?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
   type?: InputMaybe<Scalars['String']['input']>;
 };
 
-export type GetChannelDto = {
+export type GetSpeakingRoomDto = {
   id: Scalars['String']['input'];
+};
+
+export type ListSpeakingRoom = {
+  __typename?: 'ListSpeakingRoom';
+  data: Array<SpeakingRoom>;
+  pagination: Pagination;
 };
 
 export type Mutation = {
   __typename?: 'Mutation';
-  createChannel?: Maybe<Channel>;
-  signUp?: Maybe<User>;
-  signUpByGoogle?: Maybe<User>;
+  createSpeakingRoom?: Maybe<SpeakingRoom>;
+  createUserFromCredentials?: Maybe<User>;
+  createUserFromProviders?: Maybe<User>;
 };
 
 
-export type MutationCreateChannelArgs = {
-  createChannelDto: CreateChannelDto;
+export type MutationCreateSpeakingRoomArgs = {
+  createSpeakingRoomDto: CreateSpeakingRoomDto;
 };
 
 
-export type MutationSignUpArgs = {
-  signUp: SignUpDto;
+export type MutationCreateUserFromCredentialsArgs = {
+  createUserFromCredentialsDto: CreateUserDto;
 };
 
 
-export type MutationSignUpByGoogleArgs = {
-  signUpByGoogleDto: SignUpByGoogleDto;
+export type MutationCreateUserFromProvidersArgs = {
+  createUserFromProvidersDto: CreateUserDto;
 };
 
 export type OrderByDto = {
@@ -93,41 +92,35 @@ export type PaginationDto = {
 
 export type Query = {
   __typename?: 'Query';
-  getChannel?: Maybe<Channel>;
-  getSpeakingClub?: Maybe<SpeakingClub>;
+  getListSpeakingRoom?: Maybe<ListSpeakingRoom>;
+  getSpeakingRoom?: Maybe<SpeakingRoom>;
   hello: Scalars['String']['output'];
 };
 
 
-export type QueryGetChannelArgs = {
-  getChannelDto?: InputMaybe<GetChannelDto>;
-};
-
-
-export type QueryGetSpeakingClubArgs = {
-  filterSpeakingClubDto?: InputMaybe<FilterSpeakingClubDto>;
+export type QueryGetListSpeakingRoomArgs = {
+  filterSpeakingRoomDto?: InputMaybe<FilterSpeakingRoomDto>;
   orderByDto?: InputMaybe<OrderByDto>;
   paginationDto?: InputMaybe<PaginationDto>;
 };
 
-export type SignUpByGoogleDto = {
-  email: Scalars['String']['input'];
-  image?: InputMaybe<Scalars['String']['input']>;
-  name: Scalars['String']['input'];
-  password?: InputMaybe<Scalars['String']['input']>;
+
+export type QueryGetSpeakingRoomArgs = {
+  getSpeakingRoomDto?: InputMaybe<GetSpeakingRoomDto>;
 };
 
-export type SignUpDto = {
-  email: Scalars['String']['input'];
-  image?: InputMaybe<Scalars['String']['input']>;
-  name: Scalars['String']['input'];
-  password?: InputMaybe<Scalars['String']['input']>;
-};
-
-export type SpeakingClub = {
-  __typename?: 'SpeakingClub';
-  data: Array<Channel>;
-  pagination: Pagination;
+export type SpeakingRoom = {
+  __typename?: 'SpeakingRoom';
+  createdAt?: Maybe<Scalars['DateTime']['output']>;
+  host?: Maybe<User>;
+  hostId?: Maybe<Scalars['String']['output']>;
+  id: Scalars['String']['output'];
+  language?: Maybe<Scalars['String']['output']>;
+  level?: Maybe<Scalars['String']['output']>;
+  name?: Maybe<Scalars['String']['output']>;
+  type?: Maybe<Scalars['String']['output']>;
+  updatedAt?: Maybe<Scalars['DateTime']['output']>;
+  userSpeakingRoom?: Maybe<Array<UserSpeakingRoom>>;
 };
 
 export type User = {
@@ -139,47 +132,47 @@ export type User = {
   role?: Maybe<Scalars['String']['output']>;
 };
 
-export type UserChannel = {
-  __typename?: 'UserChannel';
-  channel?: Maybe<Channel>;
-  channelId?: Maybe<Scalars['String']['output']>;
+export type UserSpeakingRoom = {
+  __typename?: 'UserSpeakingRoom';
   id: Scalars['String']['output'];
   participant?: Maybe<User>;
   participantId?: Maybe<Scalars['String']['output']>;
+  speakingRoom?: Maybe<SpeakingRoom>;
+  speakingRoomId?: Maybe<Scalars['String']['output']>;
 };
 
-export type CreateChannelMutationVariables = Exact<{
-  createChannelDto: CreateChannelDto;
+export type CreateSpeakingRoomMutationVariables = Exact<{
+  createSpeakingRoomDto: CreateSpeakingRoomDto;
 }>;
 
 
-export type CreateChannelMutation = { __typename?: 'Mutation', createChannel?: { __typename?: 'Channel', id: string, name?: string | null, level?: string | null, language?: string | null, host?: { __typename?: 'User', id: string, name: string, image?: string | null, email?: string | null } | null } | null };
+export type CreateSpeakingRoomMutation = { __typename?: 'Mutation', createSpeakingRoom?: { __typename?: 'SpeakingRoom', id: string, name?: string | null, level?: string | null, language?: string | null, host?: { __typename?: 'User', id: string, name: string, image?: string | null, email?: string | null } | null } | null };
 
-export type SignUpByGoogleMutationVariables = Exact<{
-  signUpByGoogleDto: SignUpByGoogleDto;
+export type CreateUserFromProvidersMutationVariables = Exact<{
+  createUserFromProvidersDto: CreateUserDto;
 }>;
 
 
-export type SignUpByGoogleMutation = { __typename?: 'Mutation', signUpByGoogle?: { __typename?: 'User', id: string, name: string, email?: string | null, image?: string | null } | null };
+export type CreateUserFromProvidersMutation = { __typename?: 'Mutation', createUserFromProviders?: { __typename?: 'User', id: string, name: string, email?: string | null, image?: string | null } | null };
 
-export type GetSpeakingClubQueryVariables = Exact<{
-  filterSpeakingClubDto?: InputMaybe<FilterSpeakingClubDto>;
+export type GetListSpeakingRoomQueryVariables = Exact<{
+  filterSpeakingRoomDto?: InputMaybe<FilterSpeakingRoomDto>;
   paginationDto?: InputMaybe<PaginationDto>;
   orderByDto?: InputMaybe<OrderByDto>;
 }>;
 
 
-export type GetSpeakingClubQuery = { __typename?: 'Query', getSpeakingClub?: { __typename?: 'SpeakingClub', data: Array<{ __typename?: 'Channel', id: string, name?: string | null, level?: string | null, type?: string | null, language?: string | null }>, pagination: { __typename?: 'Pagination', currentPage: number, pageSize: number, totalElements: number, totalPages: number } } | null };
+export type GetListSpeakingRoomQuery = { __typename?: 'Query', getListSpeakingRoom?: { __typename?: 'ListSpeakingRoom', data: Array<{ __typename?: 'SpeakingRoom', id: string, name?: string | null, level?: string | null, type?: string | null, language?: string | null }>, pagination: { __typename?: 'Pagination', currentPage: number, pageSize: number, totalElements: number, totalPages: number } } | null };
 
-export type GetChannelQueryVariables = Exact<{
-  getChannelDto?: InputMaybe<GetChannelDto>;
+export type GetSpeakingRoomQueryVariables = Exact<{
+  getSpeakingRoomDto?: InputMaybe<GetSpeakingRoomDto>;
 }>;
 
 
-export type GetChannelQuery = { __typename?: 'Query', getChannel?: { __typename?: 'Channel', id: string, name?: string | null, level?: string | null, type?: string | null, language?: string | null, host?: { __typename?: 'User', email?: string | null } | null } | null };
+export type GetSpeakingRoomQuery = { __typename?: 'Query', getSpeakingRoom?: { __typename?: 'SpeakingRoom', id: string, name?: string | null, level?: string | null, type?: string | null, language?: string | null, host?: { __typename?: 'User', email?: string | null } | null } | null };
 
 
-export const CreateChannelDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateChannel"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"createChannelDto"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"CreateChannelDto"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createChannel"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"createChannelDto"},"value":{"kind":"Variable","name":{"kind":"Name","value":"createChannelDto"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"level"}},{"kind":"Field","name":{"kind":"Name","value":"language"}},{"kind":"Field","name":{"kind":"Name","value":"host"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"image"}},{"kind":"Field","name":{"kind":"Name","value":"email"}}]}}]}}]}}]} as unknown as DocumentNode<CreateChannelMutation, CreateChannelMutationVariables>;
-export const SignUpByGoogleDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"SignUpByGoogle"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"signUpByGoogleDto"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"SignUpByGoogleDto"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"signUpByGoogle"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"signUpByGoogleDto"},"value":{"kind":"Variable","name":{"kind":"Name","value":"signUpByGoogleDto"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"image"}}]}}]}}]} as unknown as DocumentNode<SignUpByGoogleMutation, SignUpByGoogleMutationVariables>;
-export const GetSpeakingClubDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetSpeakingClub"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"filterSpeakingClubDto"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"FilterSpeakingClubDto"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"paginationDto"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"PaginationDto"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"orderByDto"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"OrderByDto"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getSpeakingClub"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"filterSpeakingClubDto"},"value":{"kind":"Variable","name":{"kind":"Name","value":"filterSpeakingClubDto"}}},{"kind":"Argument","name":{"kind":"Name","value":"paginationDto"},"value":{"kind":"Variable","name":{"kind":"Name","value":"paginationDto"}}},{"kind":"Argument","name":{"kind":"Name","value":"orderByDto"},"value":{"kind":"Variable","name":{"kind":"Name","value":"orderByDto"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"data"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"level"}},{"kind":"Field","name":{"kind":"Name","value":"type"}},{"kind":"Field","name":{"kind":"Name","value":"language"}}]}},{"kind":"Field","name":{"kind":"Name","value":"pagination"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"currentPage"}},{"kind":"Field","name":{"kind":"Name","value":"pageSize"}},{"kind":"Field","name":{"kind":"Name","value":"totalElements"}},{"kind":"Field","name":{"kind":"Name","value":"totalPages"}}]}}]}}]}}]} as unknown as DocumentNode<GetSpeakingClubQuery, GetSpeakingClubQueryVariables>;
-export const GetChannelDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetChannel"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"getChannelDto"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"GetChannelDto"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getChannel"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"getChannelDto"},"value":{"kind":"Variable","name":{"kind":"Name","value":"getChannelDto"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"level"}},{"kind":"Field","name":{"kind":"Name","value":"type"}},{"kind":"Field","name":{"kind":"Name","value":"language"}},{"kind":"Field","name":{"kind":"Name","value":"host"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"email"}}]}}]}}]}}]} as unknown as DocumentNode<GetChannelQuery, GetChannelQueryVariables>;
+export const CreateSpeakingRoomDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateSpeakingRoom"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"createSpeakingRoomDto"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"CreateSpeakingRoomDto"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createSpeakingRoom"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"createSpeakingRoomDto"},"value":{"kind":"Variable","name":{"kind":"Name","value":"createSpeakingRoomDto"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"level"}},{"kind":"Field","name":{"kind":"Name","value":"language"}},{"kind":"Field","name":{"kind":"Name","value":"host"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"image"}},{"kind":"Field","name":{"kind":"Name","value":"email"}}]}}]}}]}}]} as unknown as DocumentNode<CreateSpeakingRoomMutation, CreateSpeakingRoomMutationVariables>;
+export const CreateUserFromProvidersDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateUserFromProviders"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"createUserFromProvidersDto"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"CreateUserDto"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createUserFromProviders"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"createUserFromProvidersDto"},"value":{"kind":"Variable","name":{"kind":"Name","value":"createUserFromProvidersDto"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"image"}}]}}]}}]} as unknown as DocumentNode<CreateUserFromProvidersMutation, CreateUserFromProvidersMutationVariables>;
+export const GetListSpeakingRoomDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetListSpeakingRoom"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"filterSpeakingRoomDto"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"FilterSpeakingRoomDto"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"paginationDto"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"PaginationDto"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"orderByDto"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"OrderByDto"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getListSpeakingRoom"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"filterSpeakingRoomDto"},"value":{"kind":"Variable","name":{"kind":"Name","value":"filterSpeakingRoomDto"}}},{"kind":"Argument","name":{"kind":"Name","value":"paginationDto"},"value":{"kind":"Variable","name":{"kind":"Name","value":"paginationDto"}}},{"kind":"Argument","name":{"kind":"Name","value":"orderByDto"},"value":{"kind":"Variable","name":{"kind":"Name","value":"orderByDto"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"data"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"level"}},{"kind":"Field","name":{"kind":"Name","value":"type"}},{"kind":"Field","name":{"kind":"Name","value":"language"}}]}},{"kind":"Field","name":{"kind":"Name","value":"pagination"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"currentPage"}},{"kind":"Field","name":{"kind":"Name","value":"pageSize"}},{"kind":"Field","name":{"kind":"Name","value":"totalElements"}},{"kind":"Field","name":{"kind":"Name","value":"totalPages"}}]}}]}}]}}]} as unknown as DocumentNode<GetListSpeakingRoomQuery, GetListSpeakingRoomQueryVariables>;
+export const GetSpeakingRoomDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetSpeakingRoom"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"getSpeakingRoomDto"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"GetSpeakingRoomDto"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getSpeakingRoom"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"getSpeakingRoomDto"},"value":{"kind":"Variable","name":{"kind":"Name","value":"getSpeakingRoomDto"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"level"}},{"kind":"Field","name":{"kind":"Name","value":"type"}},{"kind":"Field","name":{"kind":"Name","value":"language"}},{"kind":"Field","name":{"kind":"Name","value":"host"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"email"}}]}}]}}]}}]} as unknown as DocumentNode<GetSpeakingRoomQuery, GetSpeakingRoomQueryVariables>;

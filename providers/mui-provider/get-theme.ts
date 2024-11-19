@@ -18,7 +18,6 @@ export const getTheme = (mode: "dark" | "light") => {
                         fontFamily: "GeistMonoVF, Arial, sans-serif",
                         textTransform: "capitalize",
                         fontWeight: "bold",
-                        minWidth: '100px '
                     },
                 },
             },

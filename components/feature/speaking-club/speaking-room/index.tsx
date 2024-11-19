@@ -1,5 +1,5 @@
 "use client";
-import { GET_CHANNEL } from "@/graphql/query/speaking-club";
+import { GET_SPEAKING_ROOM } from "@/graphql/query/speaking-club";
 import { useLazyQuery } from "@apollo/client";
 import { useSession } from "next-auth/react";
 import { useParams } from "next/navigation";
@@ -29,7 +29,7 @@ let constraints: MediaStreamConstraints = {
 function index() {
   const { data: user } = useSession();
   const { id } = useParams();
-  const [getChannel, { data: channel }] = useLazyQuery(GET_CHANNEL);
+  const [getSpeakingRoom, { data: speakingRoom }] = useLazyQuery(GET_SPEAKING_ROOM);
   const localStreamRef = useRef<HTMLVideoElement | null>(null);
 
   const getLocalStream = async () => {
@@ -38,18 +38,18 @@ function index() {
         await navigator.mediaDevices.getUserMedia(constraints);
   };
 
-  const joinChannel = async () => {};
+  const joinSpeakingRoom = async () => {};
 
-  const leaveChannel = async () => {};
+  const leaveSpeakingRoom = async () => {};
 
   useEffect(() => {
-    joinChannel();
+    joinSpeakingRoom();
     getLocalStream();
 
     (async () => {
-      await getChannel({
+      await getSpeakingRoom({
         variables: {
-          getChannelDto: {
+          getSpeakingRoomDto: {
             id,
           },
         },
@@ -58,10 +58,10 @@ function index() {
   }, []);
 
   const isHost = useMemo(() => {
-    if (user && channel) {
-      return user?.user?.email === channel?.getChannel?.host?.email;
+    if (user && speakingRoom) {
+      return user?.user?.email === speakingRoom?.getSpeakingRoom?.host?.email;
     }
-  }, [user, channel]);
+  }, [user, speakingRoom]);
 
   return (
     <>

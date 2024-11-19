@@ -3,8 +3,8 @@ import React from "react";
 import { ImSpinner2 } from "react-icons/im";
 
 function page() {
-  const Channel = dynamic(
-    () => import("@/components/feature/speaking-club/channel"),
+  const SpeakingRoom = dynamic(
+    () => import("@/components/feature/speaking-club/speaking-room"),
     {
       ssr: false,
       loading: () => (
@@ -15,7 +15,7 @@ function page() {
       suspense: true,
     }
   );
-  return <Channel />;
+  return <SpeakingRoom />;
 }
 
 export default page;

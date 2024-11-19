@@ -37,8 +37,8 @@ function index() {
   };
 
   return (
-    <div className="w-full">
-      <div className="w-full max-w-[500px]">
+    <div className="w-full max-w-[500px]">
+      <div className="w-full">
         <TextField
           label="Search"
           size="small"

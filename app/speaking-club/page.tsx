@@ -3,7 +3,7 @@ import dynamic from "next/dynamic";
 import React from "react";
 import { ImSpinner2 } from "react-icons/im";
 
-const SpeakingClub = dynamic(
+const SpeakingRoom = dynamic(
   () => import("@/components/feature/speaking-club"),
   {
     ssr: false,
@@ -19,7 +19,7 @@ const SpeakingClub = dynamic(
 function page() {
   return (
     <MainLayout>
-      <SpeakingClub />
+      <SpeakingRoom />
     </MainLayout>
   );
 }

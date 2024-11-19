@@ -10,10 +10,10 @@ import NextImage from "next/image";
 import { useMutation } from "@apollo/client";
 import Input from "@/components/ui/input";
 import Select from "@/components/ui/select";
-import { CREATE_CHANNEL } from "@/graphql/mutation/speaking-club";
+import { CREATE_SPEAKING_ROOM } from "@/graphql/mutation/speaking-club";
 import { useFormik } from "formik";
 import { scrollToFirstElement } from "@/components/utils";
-import { createChannelValidation } from "./validation";
+import { createSpeakingRoomValidation } from "./validation";
 import { useGenerateOption } from "../speaking-club.const";
 import { useRouter } from "next/navigation";
 
@@ -45,7 +45,7 @@ const CreateSpeakingRoom = React.memo(() => {
       level: null,
       type: null,
     },
-    validationSchema: createChannelValidation,
+    validationSchema: createSpeakingRoomValidation,
     onSubmit: (values) => {
       setTimeout(() => {
         scrollToFirstElement("error-message-scroll");
@@ -60,13 +60,13 @@ const CreateSpeakingRoom = React.memo(() => {
     setFieldValue(keyname, value);
   };
 
-  const [createChannel] = useMutation(CREATE_CHANNEL);
+  const [createSpeakingRoom] = useMutation(CREATE_SPEAKING_ROOM);
 
   const handleSubmit = async (values: any) => {
     try {
-      const res = await createChannel({
+      const res = await createSpeakingRoom({
         variables: {
-          createChannelDto: {
+          createSpeakingRoomDto: {
             name: values.name,
             level: values.level.value,
             language: values.language.value,
@@ -74,7 +74,7 @@ const CreateSpeakingRoom = React.memo(() => {
           },
         },
       });
-      router.push(`/speaking-club/${res?.data?.createChannel?.id}`);
+      router.push(`/speaking-club/${res?.data?.createSpeakingRoom?.id}`);
     } catch (error) {
     } finally {
       handleClose();
@@ -83,14 +83,8 @@ const CreateSpeakingRoom = React.memo(() => {
 
   return (
     <React.Fragment>
-      <Button
-        variant="contained"
-        onClick={handleClickOpen}
-        sx={{
-          minWidth: "141px",
-        }}
-      >
-        Create Channel
+      <Button variant="contained" onClick={handleClickOpen}>
+        Create Speaking Room
       </Button>
       <Dialog
         sx={{ "& .MuiDialog-paper": { width: "100%", maxWidth: "700px" } }}
@@ -105,7 +99,7 @@ const CreateSpeakingRoom = React.memo(() => {
           onSubmit={formik.handleSubmit}
         >
           <div className="flex items-center justify-between gap-6">
-            <div className="font-bold text-lg">Create Channel</div>
+            <div className="font-bold text-lg">Create Speaking Room</div>
             <IconButton color="default" onClick={handleClose}>
               <CloseTwoTone />
             </IconButton>

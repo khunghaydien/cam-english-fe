@@ -1,7 +1,7 @@
 import { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import jwt, { JwtPayload } from "jsonwebtoken";
-import { SIGN_UP_BY_GOOGLE } from "@/graphql/mutation/user";
+import { CREATE_USER_FROM_PROVIDERS } from "@/graphql/mutation/user";
 import { client } from "@/providers/apollo-provider/client";
 
 declare module "next-auth" {
@@ -56,9 +56,9 @@ export const authOptions: NextAuthOptions = {
             if (user) {
                 try {
                     await client.mutate({
-                        mutation: SIGN_UP_BY_GOOGLE,
+                        mutation: CREATE_USER_FROM_PROVIDERS,
                         variables: {
-                            signUpByGoogleDto: {
+                            createUserFromProvidersDto: {
                                 name: user.name,
                                 email: user.email,
                                 image: user.image,
