@@ -1,11 +1,21 @@
 import { Search } from "@mui/icons-material";
-import { Button, Chip, InputAdornment, Menu, TextField } from "@mui/material";
+import { Button, InputAdornment, Menu, TextField } from "@mui/material";
 import { useFormik } from "formik";
 import React from "react";
 import TuneTwoToneIcon from "@mui/icons-material/TuneTwoTone";
 import { useGenerateOption } from "../speaking-club.const";
+import SelectChip, { OptionProps } from "@/components/ui/select-chip";
+import { useSelector } from "react-redux";
+import {
+  selectSpeakingRoom,
+  SpeakingRoomState,
+} from "@/stores/reducers/speaking-room.reducer";
+import { FilterSpeakingRoomDto } from "@/gql/graphql";
 
 function index() {
+  const { filterSpeakingRoomDto }: SpeakingRoomState =
+    useSelector(selectSpeakingRoom);
+
   const { levelOptions, typeOptions, languageOptions } = useGenerateOption();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -19,12 +29,7 @@ function index() {
   };
 
   const formik = useFormik({
-    initialValues: {
-      name: "",
-      level: null,
-      type: null,
-      language: null,
-    },
+    initialValues: filterSpeakingRoomDto,
     onSubmit: () => {},
   });
 
@@ -35,6 +40,13 @@ function index() {
   ) => {
     setFieldValue("name", e.target.value);
   };
+
+  const handleClear = () => {
+    handleClose();
+    formik.setValues({} as FilterSpeakingRoomDto);
+  };
+
+  const handleFilter = () => {};
 
   return (
     <div className="w-full max-w-[500px]">
@@ -73,55 +85,52 @@ function index() {
           id="account-menu"
           open={open}
           onClose={handleClose}
+          sx={{
+            marginTop: "10px",
+          }}
           transformOrigin={{ horizontal: "right", vertical: "top" }}
           anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
         >
           <div className="flex flex-col gap-3">
             <div className="flex gap-3 items-center">
-              <div className="p-3 rounded-lg bg-primary/10 flex flex-col gap-1">
-                <div className="font-bold text-primary">Level</div>
-                <div className="flex gap-1 flex-wrap">
-                  {levelOptions.map(({ label, value }) => (
-                    <Chip
-                      key={value}
-                      label={<>{label}</>}
-                      variant={values.level === value ? "filled" : "outlined"}
-                      onClick={() => setFieldValue("level", value)}
-                    />
-                  ))}
-                </div>
-              </div>
-              <div className="p-3 rounded-lg bg-primary/10 flex flex-col gap-1">
-                <div className="font-bold text-primary">Type</div>
-                <div className="flex gap-1 flex-wrap">
-                  {typeOptions.map(({ label, value }) => (
-                    <Chip
-                      key={value}
-                      label={<>{label}</>}
-                      variant={values.type === value ? "filled" : "outlined"}
-                      onClick={() => setFieldValue("type", value)}
-                    />
-                  ))}
-                </div>
-              </div>
+              <SelectChip
+                isMultiple
+                label="Level"
+                options={levelOptions}
+                onSelect={(option: OptionProps[] | null) =>
+                  setFieldValue("level", option)
+                }
+                selected={values.level}
+              />
+              <SelectChip
+                isMultiple
+                label="Type"
+                options={typeOptions}
+                onSelect={(option: OptionProps[] | null) =>
+                  setFieldValue("type", option)
+                }
+                selected={values.type}
+              />
             </div>
-            <div className="p-3 rounded-lg bg-primary/10 flex flex-col gap-1 max-w-[630px]">
-              <div className="font-bold text-primary">Language</div>
-              <div className="flex gap-1 flex-wrap">
-                {languageOptions.map(({ label, value }) => (
-                  <Chip
-                    key={value}
-                    label={<>{label}</>}
-                    variant={values.language === value ? "filled" : "outlined"}
-                    onClick={() => setFieldValue("language", value)}
-                  />
-                ))}
-              </div>
+            <div className="max-w-[630px]">
+              <SelectChip
+                isMultiple
+                label="Language"
+                options={languageOptions}
+                onSelect={(option: OptionProps[] | null) =>
+                  setFieldValue("language", option)
+                }
+                selected={values.language}
+              />
             </div>
-            <div className="flex w-full justify-end w-full gap-3">
-              <Button>Cancel</Button>
-              <Button variant="outlined">Clear</Button>
-              <Button variant="contained">Filter</Button>
+            <div className="flex w-full justify-end  gap-3">
+              <Button onClick={handleClose}>Cancel</Button>
+              <Button variant="outlined" onClick={handleClear}>
+                Clear
+              </Button>
+              <Button variant="contained" onClick={handleFilter}>
+                Filter
+              </Button>
             </div>
           </div>
         </Menu>

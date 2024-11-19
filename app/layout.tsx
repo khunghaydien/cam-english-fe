@@ -9,6 +9,7 @@ import { authOptions } from "@/consts";
 import ClientProvider from "@/providers/apollo-provider";
 import MuiProvider from "@/providers/mui-provider";
 import "./globals.css";
+import StoreProvider from "@/providers/store-provider";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -40,20 +41,22 @@ export default async function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground`}
       >
         <ClientProvider>
-          <SessionProvider session={session}>
-            <ThemeProvider
-              attribute="class"
-              defaultTheme="dark"
-              enableSystem
-              disableTransitionOnChange
-            >
-              <MuiProvider>
-                <NextIntlClientProvider messages={messages}>
-                  {children}
-                </NextIntlClientProvider>
-              </MuiProvider>
-            </ThemeProvider>
-          </SessionProvider>
+          <StoreProvider>
+            <SessionProvider session={session}>
+              <ThemeProvider
+                attribute="class"
+                defaultTheme="dark"
+                enableSystem
+                disableTransitionOnChange
+              >
+                <MuiProvider>
+                  <NextIntlClientProvider messages={messages}>
+                    {children}
+                  </NextIntlClientProvider>
+                </MuiProvider>
+              </ThemeProvider>
+            </SessionProvider>
+          </StoreProvider>
         </ClientProvider>
       </body>
     </html>

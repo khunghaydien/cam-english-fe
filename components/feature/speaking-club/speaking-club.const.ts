@@ -1,13 +1,7 @@
 
+import { OptionProps } from "@/components/ui/select-chip";
 import { convertEnumToOption } from "@/components/utils";
 import { useMemo } from "react";
-
-export type OptionProps = {
-    value: string | number;
-    label: string;
-    image?: string;
-    icon?: string;
-};
 
 export const ELEVEL = {
     FOUNDATION: "FOUNDATION",
