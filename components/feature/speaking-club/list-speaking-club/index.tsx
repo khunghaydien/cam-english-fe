@@ -8,34 +8,53 @@ import { capitalizeWords } from "@/components/utils";
 import { Phone } from "@mui/icons-material";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { GET_LIST_SPEAKING_CLUB } from "@/graphql/query/speaking-club";
+import { GET_SPEAKING_CLUB } from "@/graphql/query/speaking-club";
+import {
+  selectSpeakingClub,
+  SpeakingClubState,
+} from "@/stores/reducers/speaking-club.reducer";
+import { useSelector } from "react-redux";
 
-function index() {
-  const router = useRouter();
-  const [getListSpeakingRoom, { data, loading, refetch }] = useLazyQuery(
-    GET_LIST_SPEAKING_CLUB
-  );
-  const { data: user } = useSession();
+const useGetSpeakingClub = () => {
+  const [getSpeakingClub, { data, loading, refetch }] =
+    useLazyQuery(GET_SPEAKING_CLUB);
+  const {
+    filterSpeakingClubDto,
+    paginationDto,
+    orderByDto,
+  }: SpeakingClubState = useSelector(selectSpeakingClub);
+
   useEffect(() => {
     (async () => {
-      await getListSpeakingRoom({
+      await getSpeakingClub({
         variables: {
-          paginationDto: {
-            page: 1,
-            pageSize: 20,
+          paginationDto: paginationDto,
+          orderByDto: orderByDto,
+          filterSpeakingClubDto: {
+            name: filterSpeakingClubDto.name,
+            level: filterSpeakingClubDto.level?.map(({ value }) => value),
+            language: filterSpeakingClubDto.language?.map(({ value }) => value),
+            type: filterSpeakingClubDto.type?.map(({ value }) => value),
           },
         },
       });
     })();
-  }, [getListSpeakingRoom]);
+  }, [filterSpeakingClubDto]);
 
+  return { data, loading };
+};
+
+function index() {
+  const router = useRouter();
+  const { data: user } = useSession();
+  const { loading, data } = useGetSpeakingClub();
   return (
     <div style={{ maxHeight: "calc(100vh - 200px)", overflowY: "auto" }}>
       {loading ? (
         <>Loading...</>
       ) : (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {data?.getListSpeakingRoom?.data?.map((speakingRoom: SpeakingRoom) => (
+          {data?.getSpeakingClub?.data?.map((speakingRoom: SpeakingRoom) => (
             <section
               key={speakingRoom.id}
               className="rounded-lg bg-muted-foreground/10 p-6 flex flex-col gap-6 items-center justify-center flex-grow"

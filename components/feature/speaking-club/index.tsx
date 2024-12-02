@@ -2,8 +2,8 @@
 import { useMounted } from "@/components/hook";
 import React from "react";
 import CreateSpeakingRoom from "./create-speaking-room";
-import FilterSpeakingRoom from "./filter-speaking-room";
-import ListSpeakingRoom from "./list-speaking-room";
+import FilterSpeakingRoom from "./filter-speaking-club";
+import ListSpeakingRoom from "./list-speaking-club";
 function index() {
   const mounted = useMounted();
   if (!mounted) return null;

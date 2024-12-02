@@ -5,10 +5,10 @@ import {
   configureStore,
   ThunkAction,
 } from "@reduxjs/toolkit";
-import speakingRoomReducer from "./reducers/speaking-room.reducer";
+import speakingClubReducer from "./reducers/speaking-club.reducer";
 
 const rootReducer = combineReducers({
-  speakingRoom: speakingRoomReducer,
+  speakingClub: speakingClubReducer,
 });
 
 export const store = configureStore({

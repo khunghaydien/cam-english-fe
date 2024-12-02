@@ -1,21 +1,23 @@
 import { Search } from "@mui/icons-material";
 import { Button, InputAdornment, Menu, TextField } from "@mui/material";
 import { useFormik } from "formik";
-import React from "react";
+import React, { useCallback } from "react";
 import TuneTwoToneIcon from "@mui/icons-material/TuneTwoTone";
 import { useGenerateOption } from "../speaking-club.const";
 import SelectChip, { OptionProps } from "@/components/ui/select-chip";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
-  selectSpeakingRoom,
-  SpeakingRoomState,
-} from "@/stores/reducers/speaking-room.reducer";
-import { FilterSpeakingRoomDto } from "@/gql/graphql";
-
+  FilterSpeakingClubDto,
+  selectSpeakingClub,
+  setFilterSpeakingClub,
+  SpeakingClubState,
+} from "@/stores/reducers/speaking-club.reducer";
+import { AppDispatch } from "@/stores";
+import { debounce } from "lodash";
 function index() {
-  const { filterSpeakingRoomDto }: SpeakingRoomState =
-    useSelector(selectSpeakingRoom);
-
+  const dispatch = useDispatch<AppDispatch>();
+  const { filterSpeakingClubDto }: SpeakingClubState =
+    useSelector(selectSpeakingClub);
   const { levelOptions, typeOptions, languageOptions } = useGenerateOption();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -29,24 +31,43 @@ function index() {
   };
 
   const formik = useFormik({
-    initialValues: filterSpeakingRoomDto,
+    initialValues: filterSpeakingClubDto,
     onSubmit: () => {},
   });
 
   const { values, setFieldValue } = formik;
+  
+  const debouncedDispatch = useCallback(
+    debounce((value) => {
+      dispatch(setFilterSpeakingClub({ name: value }));
+    }, 400),
+    [dispatch]
+  );
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     setFieldValue("name", e.target.value);
+    debouncedDispatch(e.target.value);
   };
 
   const handleClear = () => {
     handleClose();
-    formik.setValues({} as FilterSpeakingRoomDto);
+    formik.setValues({} as FilterSpeakingClubDto);
+    dispatch(setFilterSpeakingClub({}));
   };
 
-  const handleFilter = () => {};
+  const handleFilter = () => {
+    handleClose();
+    dispatch(
+      setFilterSpeakingClub({
+        ...filterSpeakingClubDto,
+        language: values.language,
+        level: values.level,
+        type: values.type,
+      })
+    );
+  };
 
   return (
     <div className="w-full max-w-[500px]">
@@ -97,7 +118,7 @@ function index() {
                 isMultiple
                 label="Level"
                 options={levelOptions}
-                onSelect={(option: OptionProps[] | null) =>
+                onSelect={(option?: OptionProps[]) =>
                   setFieldValue("level", option)
                 }
                 selected={values.level}
@@ -106,7 +127,7 @@ function index() {
                 isMultiple
                 label="Type"
                 options={typeOptions}
-                onSelect={(option: OptionProps[] | null) =>
+                onSelect={(option?: OptionProps[]) =>
                   setFieldValue("type", option)
                 }
                 selected={values.type}
@@ -117,7 +138,7 @@ function index() {
                 isMultiple
                 label="Language"
                 options={languageOptions}
-                onSelect={(option: OptionProps[] | null) =>
+                onSelect={(option?: OptionProps[]) =>
                   setFieldValue("language", option)
                 }
                 selected={values.language}

@@ -17,7 +17,7 @@ type SelectChipProps<T> = {
   label: string;
 };
 
-const SelectChip = <T extends OptionProps | OptionProps[] | null>({
+const SelectChip = <T extends OptionProps | OptionProps[] | undefined>({
   isMultiple,
   options,
   selected,

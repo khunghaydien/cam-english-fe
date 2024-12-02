@@ -1,12 +1,12 @@
 import { gql } from "@apollo/client";
-export const GET_LIST_SPEAKING_CLUB = gql`
-  query GetListSpeakingRoom(
-    $filterSpeakingRoomDto: FilterSpeakingRoomDto,
+export const GET_SPEAKING_CLUB = gql`
+  query GetSpeakingClub(
+    $filterSpeakingClubDto: FilterSpeakingClubDto,
     $paginationDto: PaginationDto,
     $orderByDto: OrderByDto
   ) {
-    getListSpeakingRoom(
-      filterSpeakingRoomDto: $filterSpeakingRoomDto,
+    getSpeakingClub(
+      filterSpeakingClubDto: $filterSpeakingClubDto,
       paginationDto: $paginationDto,
       orderByDto: $orderByDto
     ) {
