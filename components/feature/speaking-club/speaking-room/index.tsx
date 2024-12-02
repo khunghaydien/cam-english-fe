@@ -1,16 +1,9 @@
 "use client";
-import { GET_SPEAKING_ROOM } from "@/graphql/query/speaking-club";
-import { useLazyQuery } from "@apollo/client";
-import { useSession } from "next-auth/react";
 import { useParams } from "next/navigation";
-import React, { useEffect, useMemo, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 let localStream: MediaStream;
-let remoteStream: MediaStream;
 let peerConnection: RTCPeerConnection;
-
-const servers: {
-  iceServers: RTCIceServer[];
-} = {
+const servers = {
   iceServers: [
     {
       urls: ["stun:stun1.l.google.com:19302", "stun:stun2.l.google.com:19302"],
@@ -18,7 +11,7 @@ const servers: {
   ],
 };
 
-let constraints: MediaStreamConstraints = {
+const constraints = {
   video: {
     width: { min: 640, ideal: 1920, max: 1920 },
     height: { min: 480, ideal: 1080, max: 1080 },
@@ -26,48 +19,45 @@ let constraints: MediaStreamConstraints = {
   audio: true,
 };
 
-function index() {
-  const { data: user } = useSession();
-  const { id } = useParams();
-  const [getSpeakingRoom, { data: speakingRoom }] = useLazyQuery(GET_SPEAKING_ROOM);
+const SpeakingRoom = () => {
+  const { roomId } = useParams();
   const localStreamRef = useRef<HTMLVideoElement | null>(null);
 
-  const getLocalStream = async () => {
-    if (localStreamRef && localStreamRef.current)
-      localStreamRef.current.srcObject =
-        await navigator.mediaDevices.getUserMedia(constraints);
+  const createPeerConnection = async () => {
+    peerConnection = new RTCPeerConnection(servers);
+
+    localStream?.getTracks().forEach((track) => {
+      peerConnection.addTrack(track, localStream);
+    });
+
+    peerConnection.addEventListener("icecandidate", (e) => {
+      console.log("...icecandidate", e);
+    });
   };
 
-  const joinSpeakingRoom = async () => {};
-
-  const leaveSpeakingRoom = async () => {};
+  const init = async () => {
+    localStream = await navigator.mediaDevices.getUserMedia(constraints);
+    if (localStreamRef && localStreamRef.current && localStream) {
+      localStreamRef.current.srcObject = localStream;
+    }
+    await createPeerConnection();
+    try {
+      const offer = await peerConnection.createOffer();
+      console.log("offer", offer);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   useEffect(() => {
-    joinSpeakingRoom();
-    getLocalStream();
-
-    (async () => {
-      await getSpeakingRoom({
-        variables: {
-          getSpeakingRoomDto: {
-            id,
-          },
-        },
-      });
-    })();
+    init();
   }, []);
 
-  const isHost = useMemo(() => {
-    if (user && speakingRoom) {
-      return user?.user?.email === speakingRoom?.getSpeakingRoom?.host?.email;
-    }
-  }, [user, speakingRoom]);
-
   return (
-    <>
+    <div>
       <video ref={localStreamRef} autoPlay playsInline />
-    </>
+    </div>
   );
-}
+};
 
-export default index;
+export default SpeakingRoom;
