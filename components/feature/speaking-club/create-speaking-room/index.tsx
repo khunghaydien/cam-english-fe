@@ -16,6 +16,13 @@ import { scrollToFirstElement } from "@/components/utils";
 import { createSpeakingRoomValidation } from "./validation";
 import { useGenerateOption } from "../speaking-club.const";
 import { useRouter } from "next/navigation";
+const servers = {
+  iceServers: [
+    {
+      urls: ["stun:stun1.l.google.com:19302", "stun:stun2.l.google.com:19302"],
+    },
+  ],
+};
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -63,6 +70,14 @@ const CreateSpeakingRoom = React.memo(() => {
   const [createSpeakingRoom] = useMutation(CREATE_SPEAKING_ROOM);
 
   const handleSubmit = async (values: any) => {
+    const peerConnection = new RTCPeerConnection(servers);
+    peerConnection.addEventListener("icecandidate", (e) => {
+      if (e.candidate) {
+        console.log("Sending candidate to remote peer", e.candidate);
+      }
+    });
+    const offer = await peerConnection.createOffer();
+    await peerConnection.setLocalDescription(offer);
     try {
       const res = await createSpeakingRoom({
         variables: {
@@ -71,6 +86,7 @@ const CreateSpeakingRoom = React.memo(() => {
             level: values.level.value,
             language: values.language.value,
             type: values.type.value,
+            offer: JSON.stringify(offer),
           },
         },
       });
@@ -119,7 +135,7 @@ const CreateSpeakingRoom = React.memo(() => {
               options={typeOptions}
               value={values.type}
               onChange={(_event, value) => onChangeValue(value, "type")}
-              label="Maximum Participant"
+              label="Type"
               error={!!errors.type && !!touched.type}
               helperText={
                 !!errors.type && !!touched.type && (errors.type as string)

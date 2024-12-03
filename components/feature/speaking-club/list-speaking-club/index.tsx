@@ -1,7 +1,7 @@
 "use client";
 import NextImage from "next/image";
 import { SpeakingRoom } from "@/gql/graphql";
-import { useLazyQuery } from "@apollo/client";
+import { useLazyQuery, useSubscription } from "@apollo/client";
 import { Avatar, Button } from "@mui/material";
 import React, { useEffect } from "react";
 import { capitalizeWords } from "@/components/utils";
@@ -14,10 +14,12 @@ import {
   SpeakingClubState,
 } from "@/stores/reducers/speaking-club.reducer";
 import { useSelector } from "react-redux";
+import { SPEAKING_CLUB_SUBSCRIPTION } from "@/graphql/subscription/speaking-club";
 
 const useGetSpeakingClub = () => {
   const [getSpeakingClub, { data, loading, refetch }] =
     useLazyQuery(GET_SPEAKING_CLUB);
+  const { data: newSpeakingRoom } = useSubscription(SPEAKING_CLUB_SUBSCRIPTION);
   const {
     filterSpeakingClubDto,
     paginationDto,
@@ -40,7 +42,6 @@ const useGetSpeakingClub = () => {
       });
     })();
   }, [filterSpeakingClubDto]);
-
   return { data, loading };
 };
 

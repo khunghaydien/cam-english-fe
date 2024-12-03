@@ -11,9 +11,12 @@ body {
     text-wrap: balance;
   }
 }
+
 img {
-  width: 100px; /* You can set any width you like */
-  height: auto; /* This ensures the aspect ratio is preserved */
+  width: max-content;
+  /* You can set any width you like */
+  height: auto;
+  /* This ensures the aspect ratio is preserved */
 }
 
 /* Tùy chỉnh thanh cuộn */
