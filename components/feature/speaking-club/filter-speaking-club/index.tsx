@@ -7,13 +7,15 @@ import { useGenerateOption } from "../speaking-club.const";
 import SelectChip, { OptionProps } from "@/components/ui/select-chip";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  FilterSpeakingClubDto,
+  initialFilterSpeakingRoomDto,
   selectSpeakingClub,
-  setFilterSpeakingClub,
+  setFilterSpeakingClubDto,
+  setPaginationDto,
   SpeakingClubState,
 } from "@/stores/reducers/speaking-club.reducer";
 import { AppDispatch } from "@/stores";
 import { debounce } from "lodash";
+import { initialPaginationDto } from "@/consts";
 function index() {
   const dispatch = useDispatch<AppDispatch>();
   const { filterSpeakingClubDto }: SpeakingClubState =
@@ -36,10 +38,11 @@ function index() {
   });
 
   const { values, setFieldValue } = formik;
-  
+
   const debouncedDispatch = useCallback(
     debounce((value) => {
-      dispatch(setFilterSpeakingClub({ name: value }));
+      dispatch(setFilterSpeakingClubDto({ name: value }));
+      dispatch(setPaginationDto(initialPaginationDto));
     }, 400),
     [dispatch]
   );
@@ -53,20 +56,21 @@ function index() {
 
   const handleClear = () => {
     handleClose();
-    formik.setValues({} as FilterSpeakingClubDto);
-    dispatch(setFilterSpeakingClub({}));
+    formik.setValues(initialFilterSpeakingRoomDto);
+    dispatch(setFilterSpeakingClubDto(initialFilterSpeakingRoomDto));
   };
 
   const handleFilter = () => {
     handleClose();
     dispatch(
-      setFilterSpeakingClub({
+      setFilterSpeakingClubDto({
         ...filterSpeakingClubDto,
         language: values.language,
         level: values.level,
         type: values.type,
       })
     );
+    dispatch(setPaginationDto(initialPaginationDto));
   };
 
   return (

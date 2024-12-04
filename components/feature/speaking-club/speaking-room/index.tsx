@@ -1,163 +1,187 @@
-"use client";
-import { UPDATE_SPEAKING_ROOM } from "@/graphql/mutation/speaking-club";
-import { GET_SPEAKING_ROOM } from "@/graphql/query/speaking-club";
-import { SPEAKING_CLUB_SUBSCRIPTION } from "@/graphql/subscription/speaking-club";
-import { useLazyQuery, useMutation, useSubscription } from "@apollo/client";
-import { useSession } from "next-auth/react";
-import { useParams } from "next/navigation";
-import React, { useEffect, useRef } from "react";
+// "use client";
+// import { UPDATE_SPEAKING_ROOM } from "@/graphql/mutation/speaking-club";
+// import { GET_SPEAKING_ROOM } from "@/graphql/query/speaking-club";
+// import { useLazyQuery, useMutation } from "@apollo/client";
+// import { useSession } from "next-auth/react";
+// import { useParams } from "next/navigation";
+// import React, { useEffect, useRef } from "react";
 
-let localStream: MediaStream;
-let peerConnection: RTCPeerConnection;
-const servers = {
-  iceServers: [
-    {
-      urls: ["stun:stun1.l.google.com:19302", "stun:stun2.l.google.com:19302"],
-    },
-  ],
-};
+// const servers = {
+//   iceServers: [
+//     {
+//       urls: ["stun:stun1.l.google.com:19302", "stun:stun2.l.google.com:19302"],
+//     },
+//   ],
+// };
 
-const constraints = {
-  video: {
-    width: { min: 640, ideal: 1920, max: 1920 },
-    height: { min: 480, ideal: 1080, max: 1080 },
-  },
-  audio: true,
-};
+// const constraints = {
+//   video: {
+//     width: { min: 640, ideal: 1920, max: 1920 },
+//     height: { min: 480, ideal: 1080, max: 1080 },
+//   },
+//   audio: true,
+// };
 
-const SpeakingRoom = () => {
-  peerConnection = new RTCPeerConnection(servers);
-  const { roomId } = useParams();
-  const { data: user } = useSession();
-  const localStreamRef = useRef<HTMLVideoElement | null>(null);
-  const remoteStreamRef = useRef<HTMLVideoElement | null>(null);
-  const { data: speakingRoomSubscription } = useSubscription(
-    SPEAKING_CLUB_SUBSCRIPTION
-  );
-  console.log(speakingRoomSubscription);
-  const [getSpeakingRoom, { data: speakingRoom }] =
-    useLazyQuery(GET_SPEAKING_ROOM);
-  const [updateSpeakingRoom] = useMutation(UPDATE_SPEAKING_ROOM);
+// const SpeakingRoom = () => {
+//   const { roomId } = useParams();
+//   const { data: user } = useSession();
+//   const localStreamRef = useRef<HTMLVideoElement | null>(null);
+//   const remoteStreamRef = useRef<HTMLVideoElement | null>(null);
+//   const peerConnectionRef = useRef<RTCPeerConnection | null>(null); // Dùng ref để lưu peerConnection
+//   const localStream = useRef<MediaStream | null>(null);
 
-  useEffect(() => {
-    const fetchSpeakingRoom = async () => {
-      try {
-        await getSpeakingRoom({
-          variables: {
-            getSpeakingRoomDto: {
-              id: roomId as string,
-            },
-          },
-        });
-      } catch (error) {
-        console.error("Error fetching speaking room:", error);
-      }
-    };
-    fetchSpeakingRoom();
-  }, [roomId]);
+//   const [getSpeakingRoom, { data: speakingRoom }] =
+//     useLazyQuery(GET_SPEAKING_ROOM);
+//   const [updateSpeakingRoom] = useMutation(UPDATE_SPEAKING_ROOM);
 
-  useEffect(() => {
-    if (speakingRoom) {
-      const offer = JSON.parse(speakingRoom.getSpeakingRoom.offer);
-      if (speakingRoom.getSpeakingRoom.host.email === user?.user.email) {
-        hostSignaling();
-      } else {
-        guestSignaling(offer);
-      }
-    }
-  }, [speakingRoom]);
+//   useEffect(() => {
+//     const fetchSpeakingRoom = async () => {
+//       try {
+//         await getSpeakingRoom({
+//           variables: {
+//             getSpeakingRoomDto: {
+//               id: roomId as string,
+//             },
+//           },
+//         });
+//       } catch (error) {
+//         console.error("Error fetching speaking room:", error);
+//       }
+//     };
+//     fetchSpeakingRoom();
 
-  const hostSignaling = async () => {
-    await fetchUserMedia();
-    setupPeerConnection();
+//     return () => {
+//       // Dọn dẹp kết nối khi component bị unmount
+//       if (peerConnectionRef.current) {
+//         peerConnectionRef.current.close();
+//         peerConnectionRef.current = null;
+//       }
+//       if (localStream.current) {
+//         localStream.current.getTracks().forEach((track) => track.stop());
+//       }
+//     };
+//   }, [roomId]);
 
-    try {
-      const newOffer = await peerConnection.createOffer();
-      await peerConnection.setLocalDescription(newOffer);
-      await updateSpeakingRoom({
-        variables: {
-          id: roomId as string,
-          offer: JSON.stringify(newOffer),
-        },
-      });
-    } catch (error) {
-      console.error("Error during host signaling:", error);
-    }
-  };
+//   useEffect(() => {
+//     if (speakingRoom) {
+//       const offer = JSON.parse(speakingRoom.getSpeakingRoom.offer);
+//       if (speakingRoom.getSpeakingRoom.host.email === user?.user.email) {
+//         hostSignaling();
+//       } else {
+//         guestSignaling(offer);
+//       }
+//     }
+//   }, [speakingRoom]);
 
-  const guestSignaling = async (offer: RTCSessionDescriptionInit) => {
-    setupPeerConnection();
+//   const hostSignaling = async () => {
+//     await fetchUserMedia();
+//     setupPeerConnection();
 
-    try {
-      await peerConnection.setRemoteDescription(
-        new RTCSessionDescription(offer)
-      );
-      await fetchUserMedia();
+//     try {
+//       const newOffer = await peerConnectionRef.current!.createOffer();
+//       await peerConnectionRef.current!.setLocalDescription(newOffer);
+//       await updateSpeakingRoom({
+//         variables: {
+//           updateSpeakingRoomDto: {
+//             id: roomId as string,
+//             offer: JSON.stringify(newOffer),
+//           },
+//         },
+//       });
+//     } catch (error) {
+//       console.error("Error during host signaling:", error);
+//     }
+//   };
 
-      const answer = await peerConnection.createAnswer();
-      await peerConnection.setLocalDescription(answer);
+//   const guestSignaling = async (offer: RTCSessionDescriptionInit) => {
+//     setupPeerConnection();
 
-      await updateSpeakingRoom({
-        variables: {
-          id: roomId as string,
-          offer: JSON.stringify(answer),
-        },
-      });
-    } catch (error) {
-      console.error("Error during guest signaling:", error);
-    }
-  };
+//     try {
+//       await peerConnectionRef.current!.setRemoteDescription(
+//         new RTCSessionDescription(offer)
+//       );
+//       await fetchUserMedia();
 
-  const setupPeerConnection = () => {
-    const remoteStream = new MediaStream();
+//       const answer = await peerConnectionRef.current!.createAnswer();
+//       await peerConnectionRef.current!.setLocalDescription(answer);
 
-    peerConnection.ontrack = (event) => {
-      event.streams[0].getTracks().forEach((track) => {
-        remoteStream.addTrack(track);
-      });
-    };
+//       await updateSpeakingRoom({
+//         variables: {
+//           updateSpeakingRoomDto: {
+//             id: roomId as string,
+//             offer: JSON.stringify(answer),
+//           },
+//         },
+//       });
+//     } catch (error) {
+//       console.error("Error during guest signaling:", error);
+//     }
+//   };
 
-    peerConnection.onicecandidate = async (event) => {
-      if (event.candidate) {
-        try {
-          await updateSpeakingRoom({
-            variables: {
-              id: roomId as string,
-              offer: JSON.stringify(event.candidate),
-            },
-          });
-        } catch (error) {
-          console.error("Error sending ICE candidate:", error);
-        }
-      }
-    };
+//   const setupPeerConnection = () => {
+//     if (peerConnectionRef.current) return; // Tránh tạo nhiều kết nối
 
-    if (remoteStreamRef.current) {
-      remoteStreamRef.current.srcObject = remoteStream;
-    }
-  };
+//     peerConnectionRef.current = new RTCPeerConnection(servers);
 
-  const fetchUserMedia = async () => {
-    try {
-      localStream = await navigator.mediaDevices.getUserMedia(constraints);
-      if (localStreamRef.current) {
-        localStreamRef.current.srcObject = localStream;
-      }
+//     const remoteStream = new MediaStream();
+//     peerConnectionRef.current.ontrack = (event) => {
+//       event.streams[0].getTracks().forEach((track) => {
+//         remoteStream.addTrack(track);
+//       });
+//     };
 
-      localStream.getTracks().forEach((track) => {
-        peerConnection.addTrack(track, localStream);
-      });
-    } catch (error) {
-      console.error("Error fetching user media:", error);
-    }
-  };
+//     peerConnectionRef.current.onicecandidate = async (event) => {
+//       if (event.candidate) {
+//         try {
+//           await updateSpeakingRoom({
+//             variables: {
+//               updateSpeakingRoomDto: {
+//                 id: roomId as string,
+//                 offer: JSON.stringify(event.candidate),
+//               },
+//             },
+//           });
+//         } catch (error) {
+//           console.error("Error sending ICE candidate:", error);
+//         }
+//       }
+//     };
 
-  return (
-    <div>
-      <video ref={localStreamRef} autoPlay playsInline />
-      <video ref={remoteStreamRef} autoPlay playsInline />
-    </div>
-  );
-};
+//     if (remoteStreamRef.current) {
+//       remoteStreamRef.current.srcObject = remoteStream;
+//     }
+//   };
 
-export default SpeakingRoom;
+//   const fetchUserMedia = async () => {
+//     try {
+//       localStream.current = await navigator.mediaDevices.getUserMedia(
+//         constraints
+//       );
+//       if (localStreamRef.current) {
+//         localStreamRef.current.srcObject = localStream.current;
+//       }
+
+//       localStream.current.getTracks().forEach((track) => {
+//         peerConnectionRef.current?.addTrack(track, localStream.current!);
+//       });
+//     } catch (error) {
+//       console.error("Error fetching user media:", error);
+//     }
+//   };
+
+//   return (
+//     <div>
+//       <video ref={localStreamRef} autoPlay playsInline />
+//       <video ref={remoteStreamRef} autoPlay playsInline />
+//     </div>
+//   );
+// };
+
+// export default SpeakingRoom;
+import React from "react";
+
+function index() {
+  return <div></div>;
+}
+
+export default index;

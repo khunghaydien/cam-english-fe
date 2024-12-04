@@ -16,3 +16,28 @@ export const capitalizeWords = (input: string) => {
         .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
         .join(' ');
 }
+
+export const isChangeValues = (inititalValues: any, currentValues: any) => {
+    const isChange =
+        JSON.stringify(inititalValues) != JSON.stringify(currentValues);
+    return { isChange };
+};
+
+export const getTextEllipsis = (
+    text: any,
+    maxEllipsis?: number | undefined
+) => {
+    const _maxEllipsis = maxEllipsis || 40
+    let _text = text?.toString() || ''
+    const indexBreakLine = _text.indexOf('\n')
+    if (indexBreakLine > -1) {
+        _text = `${text?.slice(0, indexBreakLine)}`
+    }
+    if (_text?.length < _maxEllipsis && indexBreakLine > -1) {
+        return `${_text}...`
+    } else if (_text?.length < _maxEllipsis && indexBreakLine === -1) {
+        return _text
+    }
+    if (_text.length === _maxEllipsis) return _text
+    return `${_text?.slice(0, _maxEllipsis)}...`
+}

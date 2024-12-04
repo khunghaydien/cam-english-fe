@@ -1,7 +1,10 @@
-import { OrderByDto, PaginationDto } from '@/gql/graphql';
+import { OrderByDto, Pagination, PaginationDto } from '@/gql/graphql';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '..';
 import { OptionProps } from '@/components/ui/select-chip';
+import { initialOrderByDto, initialPagination, initialPaginationDto } from '@/consts';
+
+export const initialFilterSpeakingRoomDto: FilterSpeakingClubDto = {}
 
 export type FilterSpeakingClubDto = {
     name?: string,
@@ -14,29 +17,34 @@ export interface SpeakingClubState {
     filterSpeakingClubDto: FilterSpeakingClubDto,
     paginationDto: PaginationDto,
     orderByDto: OrderByDto
+    pagination: Pagination
 }
 
 export const initialState: SpeakingClubState = {
-    filterSpeakingClubDto: {},
-    paginationDto: { page: 1, pageSize: 10 } as PaginationDto,
-    orderByDto: {} as OrderByDto,
+    filterSpeakingClubDto: initialFilterSpeakingRoomDto,
+    paginationDto: initialPaginationDto,
+    orderByDto: initialOrderByDto,
+    pagination: initialPagination,
 };
 
 const speakingClubSlice = createSlice({
     name: 'speakingClub',
     initialState,
     reducers: {
-        setFilterSpeakingClub: (state, action: PayloadAction<FilterSpeakingClubDto>) => {
+        setFilterSpeakingClubDto: (state, action: PayloadAction<FilterSpeakingClubDto>) => {
             state.filterSpeakingClubDto = action.payload;
         },
-        setPagination: (state, action: PayloadAction<PaginationDto>) => {
+        setPaginationDto: (state, action: PayloadAction<PaginationDto>) => {
             state.paginationDto = action.payload;
         },
-        setOrderBy: (state, action: PayloadAction<OrderByDto>) => {
+        setOrderByDto: (state, action: PayloadAction<OrderByDto>) => {
             state.orderByDto = action.payload;
+        },
+        setPagination: (state, action: PayloadAction<Pagination>) => {
+            state.pagination = action.payload;
         },
     },
 });
 export const selectSpeakingClub: any = (state: RootState) => state['speakingClub']
-export const { setFilterSpeakingClub, setPagination, setOrderBy } = speakingClubSlice.actions;
+export const { setFilterSpeakingClubDto, setPaginationDto, setOrderByDto, setPagination } = speakingClubSlice.actions;
 export default speakingClubSlice.reducer;

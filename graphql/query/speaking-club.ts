@@ -16,6 +16,11 @@ export const GET_SPEAKING_CLUB = gql`
         level
         type
         language
+        host{
+          id
+          name
+          image
+        }
       }  
       pagination{
         currentPage
