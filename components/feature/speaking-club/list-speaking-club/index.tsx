@@ -194,9 +194,9 @@ function index() {
                 <Button
                   variant="outlined"
                   startIcon={<Phone />}
-                  onClick={() =>
-                    router.push(`/speaking-club/${speakingRoom.id}`)
-                  }
+                  onClick={() => {
+                    router.push(`/speaking-club/${speakingRoom.id}`); // Điều hướng Next.js
+                  }}
                 >
                   Join and talk now
                 </Button>

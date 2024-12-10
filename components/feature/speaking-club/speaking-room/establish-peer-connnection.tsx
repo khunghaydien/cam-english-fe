@@ -1,0 +1,47 @@
+import { Socket } from "socket.io-client";
+import { peerConfiguration } from "../speaking-club.const";
+export const establishPeerConnection = async (
+  localStreamRef: React.RefObject<HTMLVideoElement>,
+  remoteStreamRef: React.RefObject<HTMLVideoElement>,
+  roomId: string,
+  socket: Socket
+): Promise<RTCPeerConnection> => {
+  const peerConnection = new RTCPeerConnection(peerConfiguration);
+  // Capture and set the local media stream
+  const localStream = await navigator.mediaDevices.getUserMedia({
+    video: true,
+    audio: true,
+  });
+  if (localStreamRef.current) {
+    localStreamRef.current.srcObject = localStream;
+  }
+
+  localStream
+    .getTracks()
+    .forEach((track) => peerConnection.addTrack(track, localStream));
+
+  // Handle ICE candidate generation
+  peerConnection.addEventListener("icecandidate", (event) => {
+    if (event.candidate) {
+      // Ensure roomId is included when emitting the ICE candidate
+      socket.emit("iceCandidate", { candidate: event.candidate, roomId });
+    }
+  });
+
+  peerConnection.addEventListener("iceconnectionstatechange", () => {
+    console.log("ICE Connection State:", peerConnection.iceConnectionState);
+  });
+
+  peerConnection.addEventListener("track", (event) => {
+    const remoteStream = new MediaStream();
+    // Add all tracks from the event to the remote stream
+    event.streams[0].getTracks().forEach((track) => {
+      remoteStream.addTrack(track);
+    });
+    // Gắn remoteStream vào video element để hiển thị
+    if (remoteStreamRef.current) {
+      remoteStreamRef.current.srcObject = remoteStream;
+    }
+  });
+  return peerConnection;
+};

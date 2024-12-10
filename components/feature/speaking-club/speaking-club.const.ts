@@ -2,6 +2,7 @@
 import { OptionProps } from "@/components/ui/select-chip";
 import { convertEnumToOption } from "@/components/utils";
 import { useMemo } from "react";
+import { io, Socket } from "socket.io-client";
 
 export const ELEVEL = {
     FOUNDATION: "FOUNDATION",
@@ -70,3 +71,16 @@ export const useGenerateOption = () => {
         languageOptions
     };
 };
+
+export const peerConfiguration = {
+    iceServers: [
+        {
+            urls: ["stun:stun.l.google.com:19302", "stun:stun1.l.google.com:19302"],
+        },
+    ],
+};
+
+export const socket: Socket = io("http://localhost:3030", {
+    withCredentials: true,
+    autoConnect: false,
+});
