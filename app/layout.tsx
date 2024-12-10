@@ -10,6 +10,7 @@ import ClientProvider from "@/providers/apollo-provider";
 import MuiProvider from "@/providers/mui-provider";
 import "./globals.css";
 import StoreProvider from "@/providers/store-provider";
+import { Toaster } from "@/components/ui/toaster";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -52,6 +53,7 @@ export default async function RootLayout({
                 <MuiProvider>
                   <NextIntlClientProvider messages={messages}>
                     {children}
+                    <Toaster />
                   </NextIntlClientProvider>
                 </MuiProvider>
               </ThemeProvider>

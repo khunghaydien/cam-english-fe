@@ -12,8 +12,8 @@ import NextImage from "next/image";
 import { Logout } from "@mui/icons-material";
 import { useRouter } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
-import { useMounted } from "@/components/hook";
 import dynamic from "next/dynamic";
+import { useMounted } from "@/hooks/mounted";
 
 const SwitchTheme = dynamic(() => import("./switch-theme"), {
   ssr: false,

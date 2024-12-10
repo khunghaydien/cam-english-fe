@@ -2,9 +2,9 @@
 import { MenuItem } from "@mui/material";
 import React from "react";
 import NextImage from "next/image";
-import { useMounted } from "@/components/hook";
 import { useLocale } from "next-intl";
 import { setUserLocale } from "@/i18n/service";
+import { useMounted } from "@/hooks/mounted";
 
 const objectLanguage: Record<
   string,

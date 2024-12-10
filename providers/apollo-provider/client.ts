@@ -1,9 +1,6 @@
 import {
     ApolloClient,
     InMemoryCache,
-    NormalizedCacheObject,
-    gql,
-    Observable,
     ApolloLink,
     HttpLink,
     split,
@@ -12,64 +9,35 @@ import { onError } from "@apollo/client/link/error";
 import { getMainDefinition } from "@apollo/client/utilities";
 import { GraphQLWsLink } from "@apollo/client/link/subscriptions";
 import { createClient } from "graphql-ws";
-
-// Function to refresh the token
-async function refreshToken(client: ApolloClient<NormalizedCacheObject>) {
-    try {
-        const { data } = await client.mutate({
-            mutation: gql`
-        mutation RefreshToken {
-          refreshToken
-        }
-      `,
-        });
-        const newAccessToken = data?.refreshToken;
-        return `Bearer ${newAccessToken}`;
-    } catch (err) {
-        throw new Error("Error getting new access token.");
-    }
-}
-
-let retryCount = 0;
-const maxRetry = 3;
+import { toast } from "@/hooks/use-toast";
 
 const errorLink = onError(
     ({ graphQLErrors, networkError, operation, forward }) => {
         if (graphQLErrors) {
             graphQLErrors.forEach(({ message, extensions }) => {
                 if (extensions) {
+                    const validationErrors: any = extensions;
+                    toast({
+                        title: validationErrors?.code?.split("_")?.join(" ") as string,
+                        description: Object.values(validationErrors)[0] as string,
+                        variant: "destructive",
+                    });
                 } else {
-                }
-            });
-
-            for (const err of graphQLErrors) {
-                if (
-                    err.extensions?.code === "UNAUTHENTICATED" &&
-                    retryCount < maxRetry
-                ) {
-                    retryCount++;
-
-                    return new Observable((observer) => {
-                        refreshToken(client)
-                            .then((token) => {
-                                operation.setContext(({ headers = {} }) => ({
-                                    headers: {
-                                        ...headers,
-                                        authorization: token,
-                                    },
-                                }));
-                                const forward$ = forward(operation);
-                                forward$.subscribe(observer);
-                            })
-                            .catch((error) => {
-                                observer.error(error);
-                            });
+                    toast({
+                        title: "GRAPHQL ERROR",
+                        description: message,
+                        variant: "destructive",
                     });
                 }
-            }
+            });
         }
 
         if (networkError) {
+            toast({
+                title: "NETWORK ERROR",
+                description: networkError.message,
+                variant: "destructive",
+            });
         }
     }
 );
@@ -77,7 +45,24 @@ const errorLink = onError(
 const successLink = new ApolloLink((operation, forward) => {
     return forward(operation).map((response) => {
         if (response.data) {
-
+            Object.keys(response.data).forEach((key) => {
+                if (
+                    key.toLowerCase().includes("create") ||
+                    key.toLowerCase().includes("update") ||
+                    key.toLowerCase().includes("delete")
+                ) {
+                    const operationName = key.charAt(0).toUpperCase() + key.slice(1);
+                    toast({
+                        title: `${operationName
+                            .replace(/([A-Z])/g, " $1")
+                            .trim()} Successful`,
+                        description: `${operationName
+                            .replace(/([A-Z])/g, " $1")
+                            .trim()} was successful.`,
+                        variant: "default",
+                    });
+                }
+            });
         }
         return response;
     });

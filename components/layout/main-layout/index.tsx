@@ -2,8 +2,8 @@
 import { Button } from "@mui/material";
 import React, { ReactNode } from "react";
 import { signIn, useSession } from "next-auth/react";
-import { useMounted } from "@/components/hook";
 import dynamic from "next/dynamic";
+import { useMounted } from "@/hooks/mounted";
 
 const AccountMenu = dynamic(() => import("./account-menu"), {
   ssr: false,

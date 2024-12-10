@@ -3,7 +3,6 @@ import { peerConfiguration } from "../speaking-club.const";
 export const initializePeerConnection = async (
     localStreamRef: React.RefObject<HTMLVideoElement>,
     remoteStreamRef: React.RefObject<HTMLVideoElement>,
-    roomId: string,
     socket: Socket
 ): Promise<RTCPeerConnection> => {
     const peerConnection = new RTCPeerConnection(peerConfiguration);
@@ -23,10 +22,9 @@ export const initializePeerConnection = async (
     // Handle ICE candidate generation
     // Handle ICE candidate generation
     peerConnection.addEventListener("icecandidate", (event) => {
-        console.log(event.candidate);
         if (event.candidate) {
             // Ensure roomId is included when emitting the ICE candidate
-            socket.emit("iceCandidate", { candidate: event.candidate, roomId });
+            socket.emit("iceCandidate", { candidate: event.candidate });
         }
     });
 

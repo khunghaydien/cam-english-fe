@@ -23,15 +23,14 @@ function Index() {
         const peerConnection = await initializePeerConnection(
           localStreamRef,
           remoteStreamRef,
-          id as string,
           socket
         );
 
         // Step 3: Handle Signaling
-        await serverSignaling(peerConnection, id as string, socket);
+        await serverSignaling(peerConnection, socket);
 
         // Step 4: Send the offer to the server
-        await sendOffer(peerConnection, id as string, socket);
+        await sendOffer(peerConnection, socket);
       } catch (error) {
         console.error("Error initializing signaling:", error);
       }

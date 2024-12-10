@@ -3,8 +3,8 @@ import { ListItemIcon, MenuItem } from "@mui/material";
 import React, { ReactNode } from "react";
 import LightModeTwoToneIcon from "@mui/icons-material/LightModeTwoTone";
 import NightlightTwoToneIcon from "@mui/icons-material/NightlightTwoTone";
-import { useMounted } from "@/components/hook";
 import { useTheme } from "next-themes";
+import { useMounted } from "@/hooks/mounted";
 
 const objectTheme: Record<
   string,
