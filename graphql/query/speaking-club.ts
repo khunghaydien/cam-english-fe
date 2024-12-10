@@ -40,7 +40,6 @@ export const GET_SPEAKING_ROOM = gql`
       level
       type
       language
-      offer
       host {
         email
       }

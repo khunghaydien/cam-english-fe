@@ -15,20 +15,3 @@ export const CREATE_SPEAKING_ROOM = gql`
     }
   }
 `;
-export const UPDATE_SPEAKING_ROOM = gql`
-  mutation UpdateSpeakingRoom($updateSpeakingRoomDto: UpdateSpeakingRoomDto!) {
-    updateSpeakingRoom(updateSpeakingRoomDto: $updateSpeakingRoomDto) {
-      id
-      name
-      level
-      language
-      offer
-      host {
-        id
-        name
-        image
-        email
-      }
-    }
-  }
-`;
