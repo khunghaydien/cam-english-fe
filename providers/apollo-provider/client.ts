@@ -77,7 +77,7 @@ const httpLink = new HttpLink({
 
 const wsLink = new GraphQLWsLink(
     createClient({
-        url: 'ws://cam-english-be-production.up.railway.app/graphql',
+        url: 'wss://cam-english-be-production.up.railway.app/graphql',
     })
 );
 
