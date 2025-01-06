@@ -12,6 +12,7 @@ function index() {
       <div className="flex justify-between gap-6 flex-wrap">
         <FilterSpeakingRoom />
         <CreateSpeakingRoom />
+        <>Test web hook</>
       </div>
       <ListSpeakingRoom />
     </div>
