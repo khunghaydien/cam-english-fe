@@ -1,6 +1,6 @@
 import { CodegenConfig } from "@graphql-codegen/cli"
 const config: CodegenConfig = {
-  schema: "http://localhost:3030/graphql",
+  schema: 'https://cam-english-be-production.up.railway.app/graphql',
   documents: ["./graphql/**/*.ts"],
   ignoreNoDocuments: true,
   generates: {

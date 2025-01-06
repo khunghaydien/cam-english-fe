@@ -9,35 +9,33 @@ import { onError } from "@apollo/client/link/error";
 import { getMainDefinition } from "@apollo/client/utilities";
 import { GraphQLWsLink } from "@apollo/client/link/subscriptions";
 import { createClient } from "graphql-ws";
-import { toast } from "@/hooks/use-toast";
-
 const errorLink = onError(
     ({ graphQLErrors, networkError, operation, forward }) => {
         if (graphQLErrors) {
             graphQLErrors.forEach(({ message, extensions }) => {
                 if (extensions) {
                     const validationErrors: any = extensions;
-                    toast({
-                        title: validationErrors?.code?.split("_")?.join(" ") as string,
-                        description: Object.values(validationErrors)[0] as string,
-                        variant: "destructive",
-                    });
+                    // toast({
+                    //     title: validationErrors?.code?.split("_")?.join(" ") as string,
+                    //     description: Object.values(validationErrors)[0] as string,
+                    //     variant: "destructive",
+                    // });
                 } else {
-                    toast({
-                        title: "GRAPHQL ERROR",
-                        description: message,
-                        variant: "destructive",
-                    });
+                    // toast({
+                    //     title: "GRAPHQL ERROR",
+                    //     description: message,
+                    //     variant: "destructive",
+                    // });
                 }
             });
         }
 
         if (networkError) {
-            toast({
-                title: "NETWORK ERROR",
-                description: networkError.message,
-                variant: "destructive",
-            });
+            // toast({
+            //     title: "NETWORK ERROR",
+            //     description: networkError.message,
+            //     variant: "destructive",
+            // });
         }
     }
 );
@@ -52,15 +50,15 @@ const successLink = new ApolloLink((operation, forward) => {
                     key.toLowerCase().includes("delete")
                 ) {
                     const operationName = key.charAt(0).toUpperCase() + key.slice(1);
-                    toast({
-                        title: `${operationName
-                            .replace(/([A-Z])/g, " $1")
-                            .trim()} Successful`,
-                        description: `${operationName
-                            .replace(/([A-Z])/g, " $1")
-                            .trim()} was successful.`,
-                        variant: "default",
-                    });
+                    // toast({
+                    //     title: `${operationName
+                    //         .replace(/([A-Z])/g, " $1")
+                    //         .trim()} Successful`,
+                    //     description: `${operationName
+                    //         .replace(/([A-Z])/g, " $1")
+                    //         .trim()} was successful.`,
+                    //     variant: "default",
+                    // });
                 }
             });
         }
@@ -70,7 +68,7 @@ const successLink = new ApolloLink((operation, forward) => {
 
 // Create an HTTP link
 const httpLink = new HttpLink({
-    uri: "http://localhost:3030/graphql",
+    uri: 'https://cam-english-be-production.up.railway.app/graphql',
     credentials: "include",
     headers: {
         "Content-Type": "application/json",
@@ -79,7 +77,7 @@ const httpLink = new HttpLink({
 
 const wsLink = new GraphQLWsLink(
     createClient({
-        url: "ws://localhost:3030/graphql",
+        url: 'ws://cam-english-be-production.up.railway.app/graphql',
     })
 );
 
