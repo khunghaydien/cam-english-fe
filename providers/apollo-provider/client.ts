@@ -68,7 +68,7 @@ const successLink = new ApolloLink((operation, forward) => {
 
 // Create an HTTP link
 const httpLink = new HttpLink({
-    uri: 'https://cam-english-be-production.up.railway.app/graphql',
+    uri: 'http://localhost:8080/graphql',
     credentials: "include",
     headers: {
         "Content-Type": "application/json",
@@ -77,7 +77,7 @@ const httpLink = new HttpLink({
 
 const wsLink = new GraphQLWsLink(
     createClient({
-        url: 'wss://cam-english-be-production.up.railway.app/graphql',
+        url: 'ws://localhost:8080/graphql',
     })
 );
 

@@ -1,7 +1,7 @@
 import { gql } from "@apollo/client";
-export const CREATE_USER_FROM_PROVIDERS = gql`
-  mutation CreateUserFromProviders($createUserFromProvidersDto: CreateUserDto!) {
-    createUserFromProviders(createUserFromProvidersDto: $createUserFromProvidersDto) {
+export const AUTHORIZATION_LOGIN = gql`
+  mutation AuthorizationLogin($authorizationLoginDto: AuthorizationLoginDto!) {
+    authorizationLogin(authorizationLoginDto: $authorizationLoginDto) {
       id
       name
       email

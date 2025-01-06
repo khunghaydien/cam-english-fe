@@ -1,8 +1,9 @@
 import { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import jwt, { JwtPayload } from "jsonwebtoken";
-import { CREATE_USER_FROM_PROVIDERS } from "@/graphql/mutation/user";
+import { AUTHORIZATION_LOGIN } from "@/graphql/mutation/user";
 import { client } from "@/providers/apollo-provider/client";
+import { isEmpty } from "lodash";
 
 declare module "next-auth" {
     interface JWT {
@@ -55,17 +56,21 @@ export const authOptions: NextAuthOptions = {
         async signIn({ user }) {
             if (user) {
                 try {
-                    await client.mutate({
-                        mutation: CREATE_USER_FROM_PROVIDERS,
+                    const res = await client.mutate({
+                        mutation: AUTHORIZATION_LOGIN,
                         variables: {
-                            createUserFromProvidersDto: {
+                            authorizationLoginDto: {
                                 name: user.name,
                                 email: user.email,
                                 image: user.image,
                             },
                         },
                     });
-                    return true
+                    if (res?.data?.authorizationLogin?.id) {
+                        return true
+                    } else {
+                        return false
+                    }
                 } catch (error) {
                     return false
                 }

@@ -72,7 +72,7 @@ export const useGenerateOption = () => {
     };
 };
 
-export const socket = io("https://cam-english-be-production.up.railway.app", {
+export const socket = io("http://localhost:8080", {
     withCredentials: true,
     autoConnect: false,
 });

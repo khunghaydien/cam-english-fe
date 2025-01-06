@@ -7,7 +7,6 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import { capitalizeWords, getTextEllipsis } from "@/components/utils";
 import { Phone } from "@mui/icons-material";
 import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
 import { GET_SPEAKING_CLUB } from "@/graphql/query/speaking-club";
 import {
   FilterSpeakingClubDto,
@@ -21,6 +20,7 @@ import { initialOrderByDto, initialPaginationDto } from "@/consts";
 import { isEmpty } from "lodash";
 import { AppDispatch } from "@/stores";
 import { ImSpinner2 } from "react-icons/im";
+import { useSession } from "next-auth/react";
 
 const formatFilterSpeakingClub = (
   filterSpeakingClubDto: FilterSpeakingClubDto
@@ -45,11 +45,12 @@ const useGetSpeakingClub = () => {
     SPEAKING_CLUB_SUBSCRIPTION
   );
   const [speakingClub, setSpeakingClub] = useState<SpeakingRoom[]>([]);
+  const [loading, setLoading] = useState<Boolean>(false);
 
   const { filterSpeakingClubDto }: SpeakingClubState =
     useSelector(selectSpeakingClub);
 
-  const { loading, refetch } = useQuery(GET_SPEAKING_CLUB, {
+  const { refetch } = useQuery(GET_SPEAKING_CLUB, {
     variables: {
       orderByDto: initialOrderByDto,
       paginationDto: initialPaginationDto,
@@ -60,6 +61,7 @@ const useGetSpeakingClub = () => {
   useEffect(() => {
     const fetchSpeakingClub = async () => {
       try {
+        setLoading(true);
         const res = await refetch({
           orderByDto: initialOrderByDto,
           paginationDto: initialPaginationDto,
@@ -73,6 +75,8 @@ const useGetSpeakingClub = () => {
         }
       } catch (error) {
         console.error("Error fetching speaking club data:", error);
+      } finally {
+        setLoading(false);
       }
     };
     fetchSpeakingClub();
@@ -91,6 +95,7 @@ const useGetSpeakingClub = () => {
 };
 
 function index() {
+  const { data: userSession } = useSession();
   const router = useRouter();
   const { loading, data, refetch } = useGetSpeakingClub();
   const { pagination, filterSpeakingClubDto }: SpeakingClubState =
@@ -140,14 +145,18 @@ function index() {
     },
     [pagination, speakingClub]
   );
-
+  
   return (
     <div
       ref={scrollAreaRef}
       style={{ height: "calc(100vh - 177px)", overflowY: "auto" }}
       onScroll={handleScroll}
     >
-      {loading ? (
+      {isEmpty(userSession?.user) ? (
+        <div className="flex items-center justify-center w-full h-full">
+          You need login first
+        </div>
+      ) : loading ? (
         <div className="flex items-center justify-center w-full h-full">
           <ImSpinner2 className="animate-spin text-primary w-12 h-12" />
         </div>
