@@ -53,7 +53,7 @@ def main():
     data = load_excel(EXCEL_FILE)
 
     # Xử lý và tạo file JSON cho từng ngôn ngữ
-    for lang in ['en', 'vi']:
+    for lang in ['en', 'vn']:
         json_data = generate_json(data, lang)
         export_json(json_data, lang)
 

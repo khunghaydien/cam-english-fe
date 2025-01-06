@@ -15,9 +15,9 @@ const objectLanguage: Record<
     value: "en",
     icon: "https://flagcdn.com/w80/gb.png",
   },
-  vi: {
+  vn: {
     label: "Vietnamese",
-    value: "vi",
+    value: "vn",
     icon: "https://flagcdn.com/w80/vn.png",
   },
 };
@@ -42,7 +42,7 @@ function AccountMenu() {
       </div>
       <div className="w-full pl-12 mb-2">
         <MenuItem
-          onClick={() => setUserLocale(objectLanguage.en.value as "en" | "vi")}
+          onClick={() => setUserLocale(objectLanguage.en.value as "en" | "vn")}
           selected={locale === objectLanguage.en.value}
         >
           <div className="flex items-center justify-between gap-6 w-full">
@@ -51,11 +51,11 @@ function AccountMenu() {
         </MenuItem>
 
         <MenuItem
-          onClick={() => setUserLocale(objectLanguage.vi.value as "en" | "vi")}
-          selected={locale === objectLanguage.vi.value}
+          onClick={() => setUserLocale(objectLanguage.vn.value as "en" | "vn")}
+          selected={locale === objectLanguage.vn.value}
         >
           <div className="flex items-center justify-between gap-6 w-full">
-            {objectLanguage.vi.label}
+            {objectLanguage.vn.label}
           </div>
         </MenuItem>
       </div>
