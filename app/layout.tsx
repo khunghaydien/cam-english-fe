@@ -11,7 +11,6 @@ import MuiProvider from "@/providers/mui-provider";
 import "./globals.css";
 import StoreProvider from "@/providers/store-provider";
 import { Toaster } from "@/components/ui/toaster";
-
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
   variable: "--font-geist-sans",
