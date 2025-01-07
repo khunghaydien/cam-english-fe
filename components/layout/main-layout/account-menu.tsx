@@ -41,22 +41,20 @@ function AccountMenu() {
 
   return (
     <>
-      <Tooltip title="Account settings">
-        <Avatar
-          sx={{ width: 40, height: 40, cursor: "pointer" }}
-          onClick={handleClick}
-          aria-controls={open ? "account-menu" : undefined}
-          aria-haspopup="true"
-          aria-expanded={open ? "true" : undefined}
-        >
-          <NextImage
-            src={data?.user?.image ?? ""}
-            alt={data?.user?.name ?? ""}
-            width={40}
-            height={40}
-          />
-        </Avatar>
-      </Tooltip>
+      <Avatar
+        sx={{ width: 40, height: 40, cursor: "pointer" }}
+        onClick={handleClick}
+        aria-controls={open ? "account-menu" : undefined}
+        aria-haspopup="true"
+        aria-expanded={open ? "true" : undefined}
+      >
+        <NextImage
+          src={data?.user?.image ?? ""}
+          alt={data?.user?.name ?? ""}
+          width={40}
+          height={40}
+        />
+      </Avatar>
       <Menu
         anchorEl={anchorEl}
         id="account-menu"
