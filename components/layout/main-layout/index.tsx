@@ -1,11 +1,9 @@
 "use client";
 import { Button } from "@mui/material";
-import React, { ReactNode, useEffect } from "react";
+import React, { ReactNode } from "react";
 import { signIn, useSession } from "next-auth/react";
 import dynamic from "next/dynamic";
 import { useMounted } from "@/hooks/mounted";
-import { useMutation } from "@apollo/client";
-import { AUTHORIZATION_LOGIN } from "@/graphql/mutation/user";
 
 const AccountMenu = dynamic(() => import("./account-menu"), {
   ssr: false,
