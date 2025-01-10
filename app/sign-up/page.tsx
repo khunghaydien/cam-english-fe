@@ -15,8 +15,7 @@ const SignUp: React.FC = () => {
           signUpDto: {
             email,
             password,
-            image:
-              "http://localhost:3000/_next/image?url=https%3A%2F%2Flh3.googleusercontent.com%2Fa%2FACg8ocLCqQg1srsIG5sC72RI0VxW2gOPmLe1aCEVwn64LcscPJiM7xr2%3Ds96-c&w=96&q=75",
+            image: "",
             name: "Phùng Hữu Đạt",
           },
         },

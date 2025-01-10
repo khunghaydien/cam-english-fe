@@ -9,6 +9,7 @@ import { onError } from "@apollo/client/link/error";
 import { getMainDefinition } from "@apollo/client/utilities";
 import { GraphQLWsLink } from "@apollo/client/link/subscriptions";
 import { createClient } from "graphql-ws";
+import { BaseURL, WsURL } from "@/consts/app.const";
 const errorLink = onError(
     ({ graphQLErrors, networkError, operation, forward }) => {
         if (graphQLErrors) {
@@ -68,7 +69,7 @@ const successLink = new ApolloLink((operation, forward) => {
 
 // Create an HTTP link
 const httpLink = new HttpLink({
-    uri: 'http://localhost:8080/graphql',
+    uri: `${BaseURL}/graphql`,
     credentials: "include",
     headers: {
         "Content-Type": "application/json",
@@ -77,7 +78,7 @@ const httpLink = new HttpLink({
 
 const wsLink = new GraphQLWsLink(
     createClient({
-        url: 'ws://localhost:8080/graphql',
+        url: `${WsURL}/graphql`,
     })
 );
 
