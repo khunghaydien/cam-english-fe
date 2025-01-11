@@ -1,9 +1,8 @@
 import { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import jwt, { JwtPayload } from "jsonwebtoken";
-import { AUTHORIZATION_SIGN_IN, SIGN_IN } from "@/graphql/mutation/user";
+import { AUTHORIZATION_SIGN_IN } from "@/graphql/mutation/user";
 import { client } from "@/providers/apollo-provider/client";
-import CredentialsProvider from "next-auth/providers/credentials";
 declare module "next-auth" {
   interface JWT {
     sub?: string;
@@ -30,29 +29,6 @@ export const authOptions: NextAuthOptions = {
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID as string,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
-    }),
-    CredentialsProvider({
-      name: "credentials",
-      credentials: {
-        email: { label: "Email", type: "text" },
-        password: { label: "Password", type: "password" },
-      },
-      authorize: async (credentials) => {
-        try {
-          const res = await client.mutate({
-            mutation: SIGN_IN,
-            variables: {
-              signInDto: {
-                email: credentials?.email,
-                password: credentials?.password,
-              },
-            },
-          });
-          return res?.data?.signIn;
-        } catch (error) {
-          return null;
-        }
-      },
     }),
   ],
   secret: process.env.NEXTAUTH_SECRET,
@@ -95,6 +71,17 @@ export const authOptions: NextAuthOptions = {
       } else {
         return false;
       }
+    },
+  },
+  cookies: {
+    sessionToken: {
+      name: "__Secure-next-auth.session-token",
+      options: {
+        httpOnly: true, 
+        secure: true, 
+        sameSite: "none", 
+        path: "/", 
+      },
     },
   },
 };
