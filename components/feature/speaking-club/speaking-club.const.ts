@@ -1,7 +1,7 @@
 
 import { OptionProps } from "@/components/ui/select-chip";
 import { convertEnumToOption } from "@/components/utils";
-import { BaseURL } from "@/consts/app.const";
+import { baseURL } from "@/consts/app.const";
 import { useMemo } from "react";
 import { io } from "socket.io-client";
 
@@ -73,7 +73,7 @@ export const useGenerateOption = () => {
     };
 };
 
-export const socket = io(BaseURL, {
+export const socket = io(baseURL, {
     withCredentials: true,
     autoConnect: false,
 });

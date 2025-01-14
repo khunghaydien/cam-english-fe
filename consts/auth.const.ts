@@ -2,7 +2,15 @@ import { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { AUTHORIZATION_SIGN_IN } from "@/graphql/mutation/user";
-import { client } from "@/providers/apollo-provider/client";
+import { ApolloClient, InMemoryCache } from "@apollo/client";
+import { baseURL } from "./app.const";
+
+const client = new ApolloClient({
+  uri: `${baseURL}/graphql`,
+  cache: new InMemoryCache(),
+  credentials: "include",
+});
+
 declare module "next-auth" {
   interface JWT {
     sub?: string;
@@ -71,17 +79,6 @@ export const authOptions: NextAuthOptions = {
       } else {
         return false;
       }
-    },
-  },
-  cookies: {
-    sessionToken: {
-      name: "__Secure-next-auth.session-token",
-      options: {
-        httpOnly: true, 
-        secure: true, 
-        sameSite: "none", 
-        path: "/", 
-      },
     },
   },
 };
