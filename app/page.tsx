@@ -1,98 +1,240 @@
-import Image from "next/image";
+"use client";
+import MainLayout from "@/components/layout/main-layout";
+import { Button, IconButton } from "@mui/material";
+import clsx from "clsx";
+import * as React from "react";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
+import { getTextEllipsis } from "@/components/utils";
+import FilterSpeakingClub from "@/components/feature/speaking-club/filter-speaking-club";
+import CreateExpense from "@/components/feature/expense/create-expense";
 
-export default function Home() {
+const columns: Column[] = [
+  { name: "Date", key: "date" },
+  { name: "Description", key: "description" },
+  { name: "Amount", key: "amount" },
+  { name: "Action", key: "action" },
+];
+
+type Expense = {
+  date: Date;
+  description: string;
+  amount: number;
+};
+
+const expenses: Expense[] = [
+  { date: new Date("2025-10-02"), description: "Ăn sáng", amount: 20 },
+  { date: new Date("2025-10-02"), description: "Mua sách", amount: 50 },
+  { date: new Date("2025-11-02"), description: "Tiền xăng", amount: 50.5 },
+  { date: new Date("2025-11-02"), description: "Tiền xăng 1", amount: 50.5 },
+  { date: new Date("2025-11-02"), description: "Tiền xăng 2", amount: 50.5 },
+  { date: new Date("2025-11-02"), description: "Tiền xăng 3", amount: 50.5 },
+];
+
+const formatData = (expenses: Expense[]) => {
+  const groupedExpenses = expenses.reduce(
+    (acc, { date, description, amount }) => {
+      const dateString = date.toISOString().split("T")[0];
+
+      if (!acc[dateString]) {
+        acc[dateString] = [];
+      }
+
+      acc[dateString].push({ description, amount });
+
+      return acc;
+    },
+    {} as Record<string, Omit<Expense, "date">[]>
+  );
+
+  return Object.entries(groupedExpenses).map(([date, details]) => ({
+    date,
+    details,
+  }));
+};
+
+const createExpenseRow = (
+  {
+    date,
+    details,
+  }: {
+    date: string;
+    details: Omit<Expense, "date">[];
+  },
+  isOpen: boolean,
+  isEdit: boolean,
+  onToggleDetail: () => void,
+  onEditExpense: () => void,
+  onCancel: () => void,
+  onSave: () => void,
+  onDeleteExpense: () => void
+) => {
+  return {
+    date,
+    description: getTextEllipsis(
+      details.map((item) => item.description).join(", ")
+    ),
+    amount: (
+      <div className="flex items-center gap-3">
+        {details.reduce((sum, expense) => sum + expense.amount, 0)}
+        <IconButton
+          disabled={isEdit}
+          aria-label="expand row"
+          size="small"
+          onClick={onToggleDetail}
+        >
+          {isOpen ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+        </IconButton>
+      </div>
+    ),
+    details,
+    action: (
+      <div className="flex items-center gap-3">
+        {isEdit ? (
+          <>
+            <Button variant="outlined" onClick={onCancel}>
+              Cancel
+            </Button>
+            <Button variant="contained" onClick={onSave}>
+              Save
+            </Button>
+          </>
+        ) : (
+          <IconButton size="small" onClick={onEditExpense}>
+            <EditIcon color="primary" />
+          </IconButton>
+        )}
+        <IconButton size="small" onClick={onDeleteExpense}>
+          <DeleteIcon color="error"></DeleteIcon>
+        </IconButton>
+      </div>
+    ),
+  };
+};
+
+export type Column = {
+  name: string;
+  key: string;
+  className?: string;
+};
+
+export type CommonTableProps = {
+  columns: Column[];
+  rows: any[];
+};
+
+export default function Page() {
+  const [openRows, setOpenRows] = React.useState<Record<number, boolean>>({});
+  const [editRows, setEditRows] = React.useState<Record<number, boolean>>({});
+
+  const handleToggleDetail = (index: number) => {
+    setOpenRows((prev) => ({ ...prev, [index]: !prev[index] }));
+  };
+
+  const handleEditExpense = (index: number) => {
+    setOpenRows((prev) => ({ ...prev, [index]: true }));
+    setEditRows((prev) => ({ ...prev, [index]: true }));
+  };
+
+  const handleCancel = (index: number) => {
+    setOpenRows((prev) => ({ ...prev, [index]: false }));
+    setEditRows((prev) => ({ ...prev, [index]: false }));
+  };
+
+  const handleSave = (index: number) => {};
+  const handleDeleteExpense = (index: number) => {};
+
+  const rows = React.useMemo(() => {
+    return formatData(expenses).map((row, index) => {
+      return createExpenseRow(
+        row,
+        openRows[index],
+        editRows[index],
+        () => handleToggleDetail(index),
+        () => handleEditExpense(index),
+        () => handleCancel(index),
+        () => handleSave(index),
+        () => handleDeleteExpense(index)
+      );
+    });
+  }, [openRows]);
+
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+    <MainLayout>
+      <div className="flex flex-col gap-6">
+        <div className="flex justify-between gap-6 flex-wrap">
+          <FilterSpeakingClub />
+          <CreateExpense />
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+        <div className="flex flex-col w-full border border-muted-foreground border-[0.5px] rounded-sm">
+          <div
+            className={`grid grid-cols-4 items-center border-b border-muted-foreground border-[0.5px bg-muted rounded-t-sm`}
+          >
+            {columns.map((column) => (
+              <div
+                key={column.key}
+                className={clsx(
+                  "p-3 min-h-[58px] flex items-center",
+                  column.className
+                )}
+              >
+                {column.name}
+              </div>
+            ))}
+          </div>
+          {rows.map((row: any, index) => (
+            <div
+              key={index}
+              className={`${
+                index !== rows.length - 1
+                  ? "border-b border-muted-foreground border-[0.5px"
+                  : ""
+              }`}
+            >
+              <div className={`grid grid-cols-4 items-center`}>
+                {columns.map((column: Column) => (
+                  <div
+                    key={column.key}
+                    className={clsx("p-3", column.className)}
+                  >
+                    {row[column.key]}
+                  </div>
+                ))}
+              </div>
+              <div
+                className={`overflow-hidden transition-all duration-300 ease-in-out ${
+                  openRows[index] ? "max-h-content" : "max-h-0"
+                }`}
+              >
+                {openRows[index] && (
+                  <div className="grid grid-cols-1">
+                    {row.details.map((detail: any, detailIndex: number) => (
+                      <div
+                        key={detailIndex}
+                        className={`grid grid-cols-${columns.length}`}
+                      >
+                        {columns.map((column) => (
+                          <div
+                            key={column.key}
+                            className={clsx(
+                              "p-3 text-primary",
+                              column.className
+                            )}
+                          >
+                            {detail[column.key]}
+                          </div>
+                        ))}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </MainLayout>
   );
 }
