@@ -15,10 +15,24 @@ const Input = forwardRef<HTMLDivElement, TextFieldProps>(
       size = "small",
       variant = "outlined",
       label,
+      type,
+      onChange,
       ...props
     },
     ref
   ) => {
+    const handleChange = (
+      e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    ) => {
+      onChange &&
+        onChange({
+          ...e,
+          target: {
+            ...e.target,
+            value: type === 'number' ? e.target.value.replace(/[^0-9]/g, "") : e.target.value,
+          },
+        });
+    };
     return (
       <Box
         sx={{
@@ -51,6 +65,7 @@ const Input = forwardRef<HTMLDivElement, TextFieldProps>(
             size={size}
             fullWidth
             variant={variant}
+            onChange={handleChange}
             {...props}
           />
           {error && helperText && (

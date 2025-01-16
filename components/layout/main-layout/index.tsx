@@ -4,6 +4,7 @@ import React, { ReactNode } from "react";
 import { signIn, useSession } from "next-auth/react";
 import dynamic from "next/dynamic";
 import { useMounted } from "@/hooks/mounted";
+import { usePathname } from "next/navigation";
 
 const AccountMenu = dynamic(() => import("./account-menu"), {
   ssr: false,
@@ -11,6 +12,7 @@ const AccountMenu = dynamic(() => import("./account-menu"), {
 });
 
 function MainLayout({ children }: { children: ReactNode }) {
+  const pathName  = usePathname()
   const mounted = useMounted();
   const { data } = useSession();
   if (!mounted) return null;
@@ -28,7 +30,7 @@ function MainLayout({ children }: { children: ReactNode }) {
                   height: "40px",
                 }}
                 onClick={() =>
-                  signIn("google", { callbackUrl: "/speaking-club" })
+                  signIn("google", { callbackUrl: pathName })
                 }
               >
                 Sign In

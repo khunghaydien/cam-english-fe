@@ -10,6 +10,11 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { getTextEllipsis } from "@/components/utils";
 import FilterSpeakingClub from "@/components/feature/speaking-club/filter-speaking-club";
 import CreateExpense from "@/components/feature/expense/create-expense";
+import { useLazyQuery } from "@apollo/client";
+import { GET_EXPENSE } from "@/graphql/query/expense";
+import { isEmpty } from "lodash";
+import { useSession } from "next-auth/react";
+import { ImSpinner2 } from "react-icons/im";
 
 const columns: Column[] = [
   { name: "Date", key: "date" },
@@ -19,24 +24,15 @@ const columns: Column[] = [
 ];
 
 type Expense = {
-  date: Date;
+  date: string;
   description: string;
-  amount: number;
+  amount: string;
 };
-
-const expenses: Expense[] = [
-  { date: new Date("2025-10-02"), description: "Ăn sáng", amount: 20 },
-  { date: new Date("2025-10-02"), description: "Mua sách", amount: 50 },
-  { date: new Date("2025-11-02"), description: "Tiền xăng", amount: 50.5 },
-  { date: new Date("2025-11-02"), description: "Tiền xăng 1", amount: 50.5 },
-  { date: new Date("2025-11-02"), description: "Tiền xăng 2", amount: 50.5 },
-  { date: new Date("2025-11-02"), description: "Tiền xăng 3", amount: 50.5 },
-];
 
 const formatData = (expenses: Expense[]) => {
   const groupedExpenses = expenses.reduce(
     (acc, { date, description, amount }) => {
-      const dateString = date.toISOString().split("T")[0];
+      const dateString = new Date(parseInt(date)).toISOString().split("T")[0];
 
       if (!acc[dateString]) {
         acc[dateString] = [];
@@ -78,7 +74,7 @@ const createExpenseRow = (
     ),
     amount: (
       <div className="flex items-center gap-3">
-        {details.reduce((sum, expense) => sum + expense.amount, 0)}
+        {details.reduce((sum, expense) => sum + parseInt(expense.amount), 0)}
         <IconButton
           disabled={isEdit}
           aria-label="expand row"
@@ -126,8 +122,26 @@ export type CommonTableProps = {
 };
 
 export default function Page() {
+  const [_getExpense, { refetch }] = useLazyQuery(GET_EXPENSE);
+  const { data: userSession } = useSession();
+  const [loading, setLoading] = React.useState<boolean>(false);
+  const [data, setData] = React.useState<Expense[]>([]);
   const [openRows, setOpenRows] = React.useState<Record<number, boolean>>({});
   const [editRows, setEditRows] = React.useState<Record<number, boolean>>({});
+  const rows = React.useMemo(() => {
+    return formatData(data).map((row, index) => {
+      return createExpenseRow(
+        row,
+        openRows[index],
+        editRows[index],
+        () => handleToggleDetail(index),
+        () => handleEditExpense(index),
+        () => handleCancel(index),
+        () => handleSave(index),
+        () => handleDeleteExpense(index)
+      );
+    });
+  }, [openRows, editRows, data]);
 
   const handleToggleDetail = (index: number) => {
     setOpenRows((prev) => ({ ...prev, [index]: !prev[index] }));
@@ -146,27 +160,39 @@ export default function Page() {
   const handleSave = (index: number) => {};
   const handleDeleteExpense = (index: number) => {};
 
-  const rows = React.useMemo(() => {
-    return formatData(expenses).map((row, index) => {
-      return createExpenseRow(
-        row,
-        openRows[index],
-        editRows[index],
-        () => handleToggleDetail(index),
-        () => handleEditExpense(index),
-        () => handleCancel(index),
-        () => handleSave(index),
-        () => handleDeleteExpense(index)
+  const fetchExpense = async () => {
+    try {
+      setLoading(true);
+      const res = await refetch({
+        variables: {
+          filterExpenseDto: {},
+        },
+      });
+      setData(
+        res?.data?.getExpense.data.map((item: any) => {
+          return {
+            date: item.date,
+            description: item.description,
+            amount: item.amount,
+          };
+        })
       );
-    });
-  }, [openRows]);
+    } catch (error) {
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  React.useEffect(() => {
+    fetchExpense();
+  }, []);
 
   return (
     <MainLayout>
       <div className="flex flex-col gap-6">
         <div className="flex justify-between gap-6 flex-wrap">
           <FilterSpeakingClub />
-          <CreateExpense />
+          <CreateExpense onCreate={fetchExpense} />
         </div>
         <div className="flex flex-col w-full border border-muted-foreground border-[0.5px] rounded-sm">
           <div
@@ -184,55 +210,86 @@ export default function Page() {
               </div>
             ))}
           </div>
-          {rows.map((row: any, index) => (
+          {isEmpty(userSession?.user) ? (
             <div
-              key={index}
-              className={`${
-                index !== rows.length - 1
-                  ? "border-b border-muted-foreground border-[0.5px"
-                  : ""
-              }`}
+              className="flex items-center justify-center w-full"
+              style={{
+                height: "calc(100vh - 237px)",
+              }}
             >
-              <div className={`grid grid-cols-4 items-center`}>
-                {columns.map((column: Column) => (
-                  <div
-                    key={column.key}
-                    className={clsx("p-3", column.className)}
-                  >
-                    {row[column.key]}
-                  </div>
-                ))}
-              </div>
-              <div
-                className={`overflow-hidden transition-all duration-300 ease-in-out ${
-                  openRows[index] ? "max-h-content" : "max-h-0"
-                }`}
-              >
-                {openRows[index] && (
-                  <div className="grid grid-cols-1">
-                    {row.details.map((detail: any, detailIndex: number) => (
+              You need login first
+            </div>
+          ) : loading ? (
+            <div
+              className="flex items-center justify-center w-full"
+              style={{
+                height: "calc(100vh - 237px)",
+              }}
+            >
+              <ImSpinner2 className="animate-spin text-primary w-12 h-12" />
+            </div>
+          ) : isEmpty(rows) && !loading ? (
+            <div
+              className="flex items-center justify-center w-full"
+              style={{
+                height: "calc(100vh - 237px)",
+              }}
+            >
+              No data
+            </div>
+          ) : (
+            <>
+              {rows.map((row: any, index) => (
+                <div
+                  key={index}
+                  className={`${
+                    index !== rows.length - 1
+                      ? "border-b border-muted-foreground border-[0.5px"
+                      : ""
+                  }`}
+                >
+                  <div className={`grid grid-cols-4 items-center`}>
+                    {columns.map((column: Column) => (
                       <div
-                        key={detailIndex}
-                        className={`grid grid-cols-${columns.length}`}
+                        key={column.key}
+                        className={clsx("p-3", column.className)}
                       >
-                        {columns.map((column) => (
-                          <div
-                            key={column.key}
-                            className={clsx(
-                              "p-3 text-primary",
-                              column.className
-                            )}
-                          >
-                            {detail[column.key]}
-                          </div>
-                        ))}
+                        {row[column.key]}
                       </div>
                     ))}
                   </div>
-                )}
-              </div>
-            </div>
-          ))}
+                  <div
+                    className={`overflow-hidden transition-all duration-300 ease-in-out ${
+                      openRows[index] ? "max-h-content" : "max-h-0"
+                    }`}
+                  >
+                    {openRows[index] && (
+                      <div className="grid grid-cols-1">
+                        {row.details.map((detail: any, detailIndex: number) => (
+                          <div
+                            key={detailIndex}
+                            className={`grid grid-cols-${columns.length}`}
+                          >
+                            {columns.map((column) => (
+                              <div
+                                key={column.key}
+                                className={clsx(
+                                  "p-3 text-primary",
+                                  column.className
+                                )}
+                              >
+                                {detail[column.key]}
+                              </div>
+                            ))}
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </>
+          )}
         </div>
       </div>
     </MainLayout>

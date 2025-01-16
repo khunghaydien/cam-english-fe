@@ -4,18 +4,15 @@ import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import Slide from "@mui/material/Slide";
 import { TransitionProps } from "@mui/material/transitions";
-import { Box, IconButton } from "@mui/material";
+import { IconButton } from "@mui/material";
 import CloseTwoTone from "@mui/icons-material/CloseTwoTone";
-import NextImage from "next/image";
 import { useMutation } from "@apollo/client";
 import Input from "@/components/ui/input";
-import Select from "@/components/ui/select";
 import { useFormik } from "formik";
 import { scrollToFirstElement } from "@/components/utils";
-import { useRouter } from "next/navigation";
-import { useGenerateOption } from "../speaking-club/speaking-club.const";
 import { createExpenseValidation } from "./validatation";
 import { CREATE_EXPENSE } from "@/graphql/mutation/expense";
+import { ImSpinner2 } from "react-icons/im";
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
     children: React.ReactElement<any, any>;
@@ -25,9 +22,7 @@ const Transition = React.forwardRef(function Transition(
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const CreateExpense = React.memo(() => {
-  const router = useRouter();
-  const { levelOptions, typeOptions, languageOptions } = useGenerateOption();
+const CreateExpense = ({ onCreate }: { onCreate: () => void }) => {
   const [open, setOpen] = React.useState(false);
   const handleClickOpen = () => {
     setOpen(true);
@@ -39,10 +34,8 @@ const CreateExpense = React.memo(() => {
 
   const formik = useFormik({
     initialValues: {
-      name: "",
-      language: null,
-      level: null,
-      type: null,
+      description: "",
+      amount: "",
     },
     validationSchema: createExpenseValidation,
     onSubmit: (values) => {
@@ -59,7 +52,7 @@ const CreateExpense = React.memo(() => {
     setFieldValue(keyname, value);
   };
 
-  const [createExpense] = useMutation(CREATE_EXPENSE);
+  const [createExpense, { loading }] = useMutation(CREATE_EXPENSE);
 
   const handleSubmit = async (values: any) => {
     try {
@@ -67,21 +60,24 @@ const CreateExpense = React.memo(() => {
         variables: {
           createExpenseDto: {
             date: Date.now().toString(),
-            description: "Ăn bánh s",
-            amount: '10',
+            description: values.description,
+            amount: values.amount,
           },
         },
       });
     } catch (error) {
     } finally {
+      onCreate();
       handleClose();
     }
   };
-
   return (
     <React.Fragment>
-      <Button variant="contained" onClick={handleClickOpen}>
-        Create Speaking Room
+      <Button
+        variant="contained"
+        onClick={handleClickOpen}
+      >
+        Create Expense
       </Button>
       <Dialog
         sx={{ "& .MuiDialog-paper": { width: "100%", maxWidth: "700px" } }}
@@ -104,75 +100,38 @@ const CreateExpense = React.memo(() => {
           <div className="flex gap-6 items-center w-full">
             <Input
               required
-              label="Name"
-              value={values.name}
-              error={!!errors.name && !!touched.name}
+              label="Description"
+              value={values.description}
+              error={!!errors.description && !!touched.description}
               helperText={
-                !!errors.name && !!touched.name && (errors.name as string)
+                !!errors.description &&
+                !!touched.description &&
+                (errors.description as string)
               }
-              onChange={(e) => onChangeValue(e.target.value, "name")}
+              onChange={(e) => onChangeValue(e.target.value, "description")}
             />
-            <Select
-              options={typeOptions}
-              value={values.type}
-              onChange={(_event, value) => onChangeValue(value, "type")}
-              label="Type"
-              error={!!errors.type && !!touched.type}
+            <Input
+              required
+              type="number"
+              label="Amount"
+              value={values.amount}
+              error={!!errors.amount && !!touched.amount}
               helperText={
-                !!errors.type && !!touched.type && (errors.type as string)
+                !!errors.amount && !!touched.amount && (errors.amount as string)
               }
-            />
-          </div>
-          <div className="flex gap-6 items-center w-full">
-            <Select
-              label="Language"
-              error={!!errors.language && !!touched.language}
-              helperText={
-                !!errors.language &&
-                !!touched.language &&
-                (errors.language as string)
-              }
-              options={languageOptions}
-              value={values.language}
-              onChange={(_event, value) => setFieldValue("language", value)}
-              renderOption={(props, option) => {
-                const { key, ...optionProps } = props;
-                return (
-                  <Box
-                    key={key}
-                    component={"li"}
-                    {...optionProps}
-                    sx={{
-                      display: "flex",
-                      gap: (theme) => theme.spacing(1),
-                      alignItems: "center",
-                    }}
-                  >
-                    <NextImage
-                      src={option.image ?? ""}
-                      alt={option.label}
-                      width={20}
-                      height={12}
-                    />
-                    {option.label}
-                  </Box>
-                );
-              }}
-            />
-            <Select
-              label="Level"
-              options={levelOptions}
-              value={values.level}
-              onChange={(_event, value) => onChangeValue(value, "level")}
-              error={!!errors.level && !!touched.level}
-              helperText={
-                !!errors.level && !!touched.level && (errors.level as string)
-              }
+              onChange={(e) => onChangeValue(e.target.value, "amount")}
             />
           </div>
           <div className="flex items-center justify-end gap-3">
             <Button onClick={handleClose}>Cancel</Button>
-            <Button type="submit" variant="contained">
+            <Button
+              type="submit"
+              variant="contained"
+              loading={loading}
+              loadingIndicator={
+                <ImSpinner2 className="animate-spin text-primary w-6 h-6" />
+              }
+            >
               Submit
             </Button>
           </div>
@@ -180,5 +139,5 @@ const CreateExpense = React.memo(() => {
       </Dialog>
     </React.Fragment>
   );
-});
+};
 export default CreateExpense;
