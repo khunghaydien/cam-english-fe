@@ -10,11 +10,49 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { getTextEllipsis } from "@/components/utils";
 import FilterSpeakingClub from "@/components/feature/speaking-club/filter-speaking-club";
 import CreateExpense from "@/components/feature/expense/create-expense";
-import { useLazyQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import { GET_EXPENSE } from "@/graphql/query/expense";
 import { isEmpty } from "lodash";
 import { useSession } from "next-auth/react";
 import { ImSpinner2 } from "react-icons/im";
+import Input from "@/components/ui/input";
+
+const EditRow = ({
+  index,
+  detailIndex,
+  editRows,
+  detail,
+}: {
+  index: number;
+  detailIndex: number;
+  editRows: Record<number, boolean>;
+  detail: any;
+}) => {
+  return (
+    <div key={detailIndex} className={`grid grid-cols-${columns.length}`}>
+      {columns.map((column) => (
+        <>
+          {editRows[index] && detail[column.key] ? (
+            <div className={clsx("p-3 text-primary", column.className)}>
+              <Input
+                type={column.key === "amount" ? "number" : "text"}
+                value={detail[column.key]}
+                onChange={(e) => {}}
+              />
+            </div>
+          ) : (
+            <div
+              key={column.key}
+              className={clsx("p-3 text-primary", column.className)}
+            >
+              {detail[column.key]}
+            </div>
+          )}
+        </>
+      ))}
+    </div>
+  );
+};
 
 const columns: Column[] = [
   { name: "Date", key: "date" },
@@ -24,15 +62,15 @@ const columns: Column[] = [
 ];
 
 type Expense = {
-  date: string;
+  date: number;
   description: string;
-  amount: string;
+  amount: number;
 };
 
 const formatData = (expenses: Expense[]) => {
   const groupedExpenses = expenses.reduce(
     (acc, { date, description, amount }) => {
-      const dateString = new Date(parseInt(date)).toISOString().split("T")[0];
+      const dateString = new Date(date).toISOString().split("T")[0];
 
       if (!acc[dateString]) {
         acc[dateString] = [];
@@ -74,7 +112,7 @@ const createExpenseRow = (
     ),
     amount: (
       <div className="flex items-center gap-3">
-        {details.reduce((sum, expense) => sum + parseInt(expense.amount), 0)}
+        {details.reduce((sum, expense) => sum + expense.amount, 0)}
         <IconButton
           disabled={isEdit}
           aria-label="expand row"
@@ -122,25 +160,37 @@ export type CommonTableProps = {
 };
 
 export default function Page() {
-  const [_getExpense, { refetch }] = useLazyQuery(GET_EXPENSE);
+  const { data, loading, refetch } = useQuery(GET_EXPENSE, {
+    variables: {
+      filterExpenseDto: {},
+    },
+  });
   const { data: userSession } = useSession();
-  const [loading, setLoading] = React.useState<boolean>(false);
-  const [data, setData] = React.useState<Expense[]>([]);
   const [openRows, setOpenRows] = React.useState<Record<number, boolean>>({});
   const [editRows, setEditRows] = React.useState<Record<number, boolean>>({});
   const rows = React.useMemo(() => {
-    return formatData(data).map((row, index) => {
-      return createExpenseRow(
-        row,
-        openRows[index],
-        editRows[index],
-        () => handleToggleDetail(index),
-        () => handleEditExpense(index),
-        () => handleCancel(index),
-        () => handleSave(index),
-        () => handleDeleteExpense(index)
-      );
-    });
+    return !isEmpty(data?.getExpense?.data)
+      ? formatData(
+          data?.getExpense?.data.map((item: any) => {
+            return {
+              date: item.date,
+              description: item.description,
+              amount: item.amount,
+            };
+          })
+        ).map((row, index) => {
+          return createExpenseRow(
+            row,
+            openRows[index],
+            editRows[index],
+            () => handleToggleDetail(index),
+            () => handleEditExpense(index),
+            () => handleCancel(index),
+            () => handleSave(index),
+            () => handleDeleteExpense(index)
+          );
+        })
+      : [];
   }, [openRows, editRows, data]);
 
   const handleToggleDetail = (index: number) => {
@@ -162,30 +212,13 @@ export default function Page() {
 
   const fetchExpense = async () => {
     try {
-      setLoading(true);
-      const res = await refetch({
+      await refetch({
         variables: {
           filterExpenseDto: {},
         },
       });
-      setData(
-        res?.data?.getExpense.data.map((item: any) => {
-          return {
-            date: item.date,
-            description: item.description,
-            amount: item.amount,
-          };
-        })
-      );
-    } catch (error) {
-    } finally {
-      setLoading(false);
-    }
+    } catch (error) {}
   };
-
-  React.useEffect(() => {
-    fetchExpense();
-  }, []);
 
   return (
     <MainLayout>
@@ -266,22 +299,12 @@ export default function Page() {
                     {openRows[index] && (
                       <div className="grid grid-cols-1">
                         {row.details.map((detail: any, detailIndex: number) => (
-                          <div
-                            key={detailIndex}
-                            className={`grid grid-cols-${columns.length}`}
-                          >
-                            {columns.map((column) => (
-                              <div
-                                key={column.key}
-                                className={clsx(
-                                  "p-3 text-primary",
-                                  column.className
-                                )}
-                              >
-                                {detail[column.key]}
-                              </div>
-                            ))}
-                          </div>
+                          <EditRow
+                            index={index}
+                            detailIndex={detailIndex}
+                            editRows={editRows}
+                            detail={detail}
+                          />
                         ))}
                       </div>
                     )}

@@ -59,9 +59,9 @@ const CreateExpense = ({ onCreate }: { onCreate: () => void }) => {
       await createExpense({
         variables: {
           createExpenseDto: {
-            date: Date.now().toString(),
+            date: Date.now(),
             description: values.description,
-            amount: values.amount,
+            amount: parseInt(values.amount),
           },
         },
       });
