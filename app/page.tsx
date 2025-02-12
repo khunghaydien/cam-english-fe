@@ -1,320 +1,271 @@
 "use client";
-import MainLayout from "@/components/layout/main-layout";
-import { Button, IconButton } from "@mui/material";
-import clsx from "clsx";
-import * as React from "react";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
-import { getTextEllipsis } from "@/components/utils";
-import FilterSpeakingClub from "@/components/feature/speaking-club/filter-speaking-club";
-import CreateExpense from "@/components/feature/expense/create-expense";
-import { useQuery } from "@apollo/client";
-import { GET_EXPENSE } from "@/graphql/query/expense";
-import { isEmpty } from "lodash";
-import { useSession } from "next-auth/react";
-import { ImSpinner2 } from "react-icons/im";
-import Input from "@/components/ui/input";
-
-const EditRow = ({
-  index,
-  detailIndex,
-  editRows,
-  detail,
-}: {
-  index: number;
-  detailIndex: number;
-  editRows: Record<number, boolean>;
-  detail: any;
-}) => {
+import add from "@/public/add.png";
+import bgNotification from "@/public/bg-notification.png";
+import body from "@/public/body.png";
+import buttonLayoutOne from "@/public/button-layout-1.png";
+import buttonLayoutTwo from "@/public/button-layout-2.png";
+import clock from "@/public/clock.png";
+import close from "@/public/close.png";
+import copy from "@/public/copy.png";
+import folder from "@/public/folder.png";
+import header from "@/public/header.png";
+import layerNotificationTwo from "@/public/layer-notification-2.png";
+import layerNotification from "@/public/layer-notification.png";
+import layer from "@/public/layer.png";
+import left from "@/public/left.png";
+import menu from "@/public/menu.png";
+import minus from "@/public/minus.png";
+import notification from "@/public/notification.png";
+import plus from "@/public/plus.png";
+import right from "@/public/right.png";
+import Image from "next/image";
+type PlusProps = {
+  value: string;
+};
+const Plus = ({ value }: PlusProps) => {
   return (
-    <div key={detailIndex} className={`grid grid-cols-${columns.length}`}>
-      {columns.map((column) => (
-        <>
-          {editRows[index] && detail[column.key] ? (
-            <div className={clsx("p-3 text-primary", column.className)}>
-              <Input
-                type={column.key === "amount" ? "number" : "text"}
-                value={detail[column.key]}
-                onChange={(e) => {}}
-              />
-            </div>
-          ) : (
-            <div
-              key={column.key}
-              className={clsx("p-3 text-primary", column.className)}
-            >
-              {detail[column.key]}
-            </div>
-          )}
-        </>
-      ))}
+    <div className="flex items-center justify-center bg-black opacity-[27%] rounded-[34px] w-[171px] h-[64px] py-[10px] px[11px] gap-[19px]">
+      <div className="flex items-center justify-center w-[49px] h-[49px] rounded-full bg-[#4e0b1d]">
+        <Image
+          src={plus}
+          alt="Plus Icon"
+          priority
+          className="cursor-pointer w-[25px] text-[#b13e5e]"
+        />
+      </div>
+      <div className="text-[39px] text-[#b46177]">{value}</div>
     </div>
   );
 };
 
-const columns: Column[] = [
-  { name: "Date", key: "date" },
-  { name: "Description", key: "description" },
-  { name: "Amount", key: "amount" },
-  { name: "Action", key: "action" },
-];
-
-type Expense = {
-  date: number;
-  description: string;
-  amount: number;
+type WingProps = {
+  imageUrl: string;
+  title: string;
+  value: string;
 };
 
-const formatData = (expenses: Expense[]) => {
-  const groupedExpenses = expenses.reduce(
-    (acc, { date, description, amount }) => {
-      const dateString = new Date(date).toISOString().split("T")[0];
-
-      if (!acc[dateString]) {
-        acc[dateString] = [];
-      }
-
-      acc[dateString].push({ description, amount });
-
-      return acc;
-    },
-    {} as Record<string, Omit<Expense, "date">[]>
-  );
-
-  return Object.entries(groupedExpenses).map(([date, details]) => ({
-    date,
-    details,
-  }));
-};
-
-const createExpenseRow = (
-  {
-    date,
-    details,
-  }: {
-    date: string;
-    details: Omit<Expense, "date">[];
-  },
-  isOpen: boolean,
-  isEdit: boolean,
-  onToggleDetail: () => void,
-  onEditExpense: () => void,
-  onCancel: () => void,
-  onSave: () => void,
-  onDeleteExpense: () => void
-) => {
-  return {
-    date,
-    description: getTextEllipsis(
-      details.map((item) => item.description).join(", ")
-    ),
-    amount: (
-      <div className="flex items-center gap-3">
-        {details.reduce((sum, expense) => sum + expense.amount, 0)}
-        <IconButton
-          disabled={isEdit}
-          aria-label="expand row"
-          size="small"
-          onClick={onToggleDetail}
-        >
-          {isOpen ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-        </IconButton>
-      </div>
-    ),
-    details,
-    action: (
-      <div className="flex items-center gap-3">
-        {isEdit ? (
-          <>
-            <Button variant="outlined" onClick={onCancel}>
-              Cancel
-            </Button>
-            <Button variant="contained" onClick={onSave}>
-              Save
-            </Button>
-          </>
-        ) : (
-          <IconButton size="small" onClick={onEditExpense}>
-            <EditIcon color="primary" />
-          </IconButton>
-        )}
-        <IconButton size="small" onClick={onDeleteExpense}>
-          <DeleteIcon color="error"></DeleteIcon>
-        </IconButton>
-      </div>
-    ),
-  };
-};
-
-export type Column = {
-  name: string;
-  key: string;
-  className?: string;
-};
-
-export type CommonTableProps = {
-  columns: Column[];
-  rows: any[];
-};
-
-export default function Page() {
-  const { data, loading, refetch } = useQuery(GET_EXPENSE, {
-    variables: {
-      filterExpenseDto: {},
-    },
-  });
-  const { data: userSession } = useSession();
-  const [openRows, setOpenRows] = React.useState<Record<number, boolean>>({});
-  const [editRows, setEditRows] = React.useState<Record<number, boolean>>({});
-  const rows = React.useMemo(() => {
-    return !isEmpty(data?.getExpense?.data)
-      ? formatData(
-          data?.getExpense?.data.map((item: any) => {
-            return {
-              date: item.date,
-              description: item.description,
-              amount: item.amount,
-            };
-          })
-        ).map((row, index) => {
-          return createExpenseRow(
-            row,
-            openRows[index],
-            editRows[index],
-            () => handleToggleDetail(index),
-            () => handleEditExpense(index),
-            () => handleCancel(index),
-            () => handleSave(index),
-            () => handleDeleteExpense(index)
-          );
-        })
-      : [];
-  }, [openRows, editRows, data]);
-
-  const handleToggleDetail = (index: number) => {
-    setOpenRows((prev) => ({ ...prev, [index]: !prev[index] }));
-  };
-
-  const handleEditExpense = (index: number) => {
-    setOpenRows((prev) => ({ ...prev, [index]: true }));
-    setEditRows((prev) => ({ ...prev, [index]: true }));
-  };
-
-  const handleCancel = (index: number) => {
-    setOpenRows((prev) => ({ ...prev, [index]: false }));
-    setEditRows((prev) => ({ ...prev, [index]: false }));
-  };
-
-  const handleSave = (index: number) => {};
-  const handleDeleteExpense = (index: number) => {};
-
-  const fetchExpense = async () => {
-    try {
-      await refetch({
-        variables: {
-          filterExpenseDto: {},
-        },
-      });
-    } catch (error) {}
-  };
-
+const Wing = ({ imageUrl, title, value }: WingProps) => {
   return (
-    <MainLayout>
-      <div className="flex flex-col gap-6">
-        <div className="flex justify-between gap-6 flex-wrap">
-          <FilterSpeakingClub />
-          <CreateExpense onCreate={fetchExpense} />
-        </div>
-        <div className="flex flex-col w-full border border-muted-foreground border-[0.5px] rounded-sm">
-          <div
-            className={`grid grid-cols-4 items-center border-b border-muted-foreground border-[0.5px bg-muted rounded-t-sm`}
-          >
-            {columns.map((column) => (
-              <div
-                key={column.key}
-                className={clsx(
-                  "p-3 min-h-[58px] flex items-center",
-                  column.className
-                )}
-              >
-                {column.name}
-              </div>
-            ))}
-          </div>
-          {isEmpty(userSession?.user) ? (
-            <div
-              className="flex items-center justify-center w-full"
-              style={{
-                height: "calc(100vh - 237px)",
-              }}
-            >
-              You need login first
-            </div>
-          ) : loading ? (
-            <div
-              className="flex items-center justify-center w-full"
-              style={{
-                height: "calc(100vh - 237px)",
-              }}
-            >
-              <ImSpinner2 className="animate-spin text-primary w-12 h-12" />
-            </div>
-          ) : isEmpty(rows) && !loading ? (
-            <div
-              className="flex items-center justify-center w-full"
-              style={{
-                height: "calc(100vh - 237px)",
-              }}
-            >
-              No data
-            </div>
-          ) : (
-            <>
-              {rows.map((row: any, index) => (
-                <div
-                  key={index}
-                  className={`${
-                    index !== rows.length - 1
-                      ? "border-b border-muted-foreground border-[0.5px"
-                      : ""
-                  }`}
-                >
-                  <div className={`grid grid-cols-4 items-center`}>
-                    {columns.map((column: Column) => (
-                      <div
-                        key={column.key}
-                        className={clsx("p-3", column.className)}
-                      >
-                        {row[column.key]}
-                      </div>
-                    ))}
-                  </div>
-                  <div
-                    className={`overflow-hidden transition-all duration-300 ease-in-out ${
-                      openRows[index] ? "max-h-content" : "max-h-0"
-                    }`}
-                  >
-                    {openRows[index] && (
-                      <div className="grid grid-cols-1">
-                        {row.details.map((detail: any, detailIndex: number) => (
-                          <EditRow
-                            index={index}
-                            detailIndex={detailIndex}
-                            editRows={editRows}
-                            detail={detail}
-                          />
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                </div>
-              ))}
-            </>
-          )}
+    <div
+      style={{
+        backgroundImage: `url(${imageUrl})`,
+        backgroundRepeat: "no-repeat",
+        width: "100%",
+        height: "294px",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        flexDirection: "column",
+      }}
+    >
+      <div className="text-[72px] text-bold">{title}</div>
+      <div className="text-[48px] text-[#dc8098]">{value}</div>
+    </div>
+  );
+};
+
+const Bet = () => {
+  return (
+    <div className="">
+      <div className="absolute w-[1080px] top-[60px]">
+        <div className="flex items-center justify-center">
+          <Image
+            src={layer}
+            alt="Layer"
+            priority
+            className="absolute z-[10] top-[-60px]"
+          />
+          <Image
+            src={clock}
+            alt="Clock Icon"
+            priority
+            className="cursor-pointer w-[182px] h-[102px] z-[100]"
+          />
         </div>
       </div>
-    </MainLayout>
+      <div className="absolute w-[1080px] top-[125px] left-[20px]">
+        <div className="flex items-center gap-[28px]">
+          <Wing imageUrl={left.src} title="BIG" value="1 : 1.98" />
+          <Wing imageUrl={right.src} title="SMALL" value="1 : 1.98" />
+        </div>
+      </div>
+    </div>
+  );
+};
+const Body = () => {
+  return (
+    <div className="relative ">
+      <div
+        style={{
+          backgroundImage: `url(${header.src})`,
+          backgroundRepeat: "no-repeat",
+          width: "100%",
+          height: "560px",
+        }}
+      >
+        <div className="flex justify-between items-center w-[1080px] px-[41px] pt-[43px]">
+          <Image
+            src={folder}
+            alt="Folder Icon"
+            priority
+            className="cursor-pointer w-[38px]"
+          />
+          <div className="flex items-center gap-3">
+            <div className="text-[48px] font-bold">
+              79rufh0IWkie9……dj7hfAhd8
+            </div>
+            <Image
+              src={copy}
+              alt="Copy Icon"
+              priority
+              className="cursor-pointer w-[34px]"
+            />
+          </div>
+          <Image
+            src={menu}
+            alt="Menu Icon"
+            priority
+            className="cursor-pointer w-[48px]"
+          />
+        </div>
+        <div className="text-[#CD3E66] w-[1080px] justify-center flex text-[33px]">
+          Our Bureau Prize Hash
+        </div>
+      </div>
+      <div
+        style={{
+          backgroundImage: `url(${body.src})`,
+          backgroundRepeat: "no-repeat",
+          width: "100%",
+          height: "449px",
+          position: "absolute",
+          top: "125px",
+        }}
+      >
+        <div className="w-[1080px] relative">
+          <div className="flex justify-between px-[18px] pt-[23px]">
+            <Plus value={"0.00"} />
+            <Plus value={"0.00"} />
+          </div>
+          <Bet />
+        </div>
+      </div>
+      <div className="flex items-center justify-between w-[1080px] px-[21px] pt-[41px]">
+        <div>
+          <div>
+            <span className="text-[33px] text-[#75757f] mr-1">
+              Betting Limits:
+            </span>
+            <span className="text-[39px] text-[#c5c5cf]">10~200,000</span>
+          </div>
+          <div>
+            <span className="text-[33px] text-[#75757f] mr-1">
+              Maximum Win:
+            </span>
+            <span className="text-[39px] text-[#c5c5cf]"> 0.00</span>
+          </div>
+        </div>
+        <div className="relative">
+          <input
+            placeholder="Bet Amount"
+            type="text"
+            className="px-[170px] py-[36px] w-[519px] h-[98px] rounded-[20px] bg-[#131314] border-[#29292F] placeholder:text-[#2e2e2e] border-[2px] text-[33px] relative"
+          />
+          <div className="flex items-center justify-center w-[64px] h-[64px] rounded-[16px] bg-[#29292f] absolute top-[17px] left-[19px] cursor-pointer">
+            <Image
+              src={minus}
+              alt="Minus Icon"
+              priority
+              className="cursor-pointer w-[27px] text-[#68686f]"
+            />
+          </div>
+          <div className="flex items-center justify-center w-[64px] h-[64px] rounded-[16px] bg-[#29292f] absolute top-[17px] right-[19px] cursor-pointer">
+            <Image
+              src={add}
+              alt="Add Icon"
+              priority
+              className="cursor-pointer w-[27px] text-[#68686f]"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const Notification = () => {
+  return (
+    <div className="flex items-center justify-center w-screen ">
+      <div>
+        <div className="absolute top-[120px]">
+          <Image src={layerNotification} alt="Layer Notification" priority />
+        </div>
+        <div className="absolute top-[120px]">
+          <Image src={layerNotificationTwo} alt="Layer Notification" priority />
+        </div>
+      </div>
+      <div
+        style={{
+          backgroundImage: `url(${bgNotification.src})`,
+          backgroundRepeat: "no-repeat",
+          width: "1080px",
+          height: "222px",
+          position: "relative",
+        }}
+      >
+        <div className="absolute top-[-35px]">
+          <Image src={notification} alt="Notification Icon" priority />
+        </div>
+        <div className="pt-[35px] pl-[300px] pr-[100px]">
+          <div className="text-[45px] font-bold text-[#bff701]">
+            X.GAME Web3 Pioneers
+          </div>
+          <div className="text-[39px]">
+            Hash games, blockchain gameplay is fairer and verifiable!
+          </div>
+        </div>
+
+        <div className="absolute top-[14px] right-[11px]">
+          <div className="flex items-center justify-center w-[65px] h-[65px] rounded-full bg-[#2d2d2d] cursor-pointe">
+            <Image src={close} alt="Close Icon" priority />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default function Home() {
+  return (
+    <div
+      className="bg-[#18181b] relative"
+      style={{ fontFamily: "Bahnschrift" }}
+    >
+      <div className="absolute top-[55px]">
+        <div className="w-screen flex justify-center items-center ">
+          <Notification />
+        </div>
+      </div>
+      <div className="flex items-center justify-center w-screen h-screen">
+        <Body />
+      </div>
+      <div className="absolute bottom-[55px]">
+        <div className="w-screen flex justify-center items-center cursor-pointer">
+          <Image
+            src={buttonLayoutOne}
+            alt="Minus Icon"
+            priority
+            className="z-[10]"
+          />
+          <div className="z-[100] absolute text-[60px] text-black">BET</div>
+          <Image
+            src={buttonLayoutTwo}
+            alt="Minus Icon"
+            priority
+            className="absolute top-[10px]"
+          />
+        </div>
+      </div>
+    </div>
   );
 }
