@@ -242,11 +242,11 @@ export default function Home() {
       style={{ fontFamily: "Bahnschrift" }}
     >
       <div className="absolute top-[55px]">
-        <div className="w-screen flex justify-center items-center ">
+        <div className="w-screen flex justify-center items-center">
           <Notification />
         </div>
       </div>
-      <div className="flex items-center justify-center w-screen h-screen">
+      <div className="flex items-center justify-center w-screen h-[1500px]">
         <Body />
       </div>
       <div className="absolute bottom-[55px]">
