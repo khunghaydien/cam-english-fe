@@ -1,9 +1,12 @@
 "use client";
 import add from "@/public/add.png";
+import back from "@/public/back.png";
+import binance from "@/public/binance.png";
 import body from "@/public/body.png";
 import clock from "@/public/clock.png";
 import close from "@/public/close.png";
 import copy from "@/public/copy.png";
+import down from "@/public/down.png";
 import folder from "@/public/folder.png";
 import header from "@/public/header.png";
 import layer from "@/public/layer.png";
@@ -11,6 +14,7 @@ import left from "@/public/left.png";
 import menu from "@/public/menu.png";
 import minus from "@/public/minus.png";
 import notification from "@/public/notification.png";
+import plusGreen from "@/public/plus-green.png";
 import plus from "@/public/plus.png";
 import right from "@/public/right.png";
 import Image from "next/image";
@@ -50,6 +54,7 @@ const Button = ({ title }: ButtonProps) => {
     </div>
   );
 };
+
 type NotificationProps = {
   title: string;
   subTitle: string;
@@ -67,9 +72,7 @@ const Notification = ({ title, subTitle }: NotificationProps) => {
           />
         </div>
       </div>
-      <div className="w-full bg-[#29292f] absolute z-0 h-[100px] bottom-[-10px] rounded-lg"></div>
-      <div className="bg-[#68686f] absolute z-10 h-[100px] bottom-[-10px] w-[50%] rounded-bl-lg"></div>
-      <div className="relative z-20 w-full flex items-center justify-start bg-black p-3 min-h-[100px] rounded-lg">
+      <div className="relative z-20 w-full flex items-center justify-start bg-black/90 p-3 min-h-[100px] rounded-lg">
         <div className="absolute z-10 w-[25%] min-w-[100px]">
           <div className="w-full h-auto flex items-center justify-center ">
             <Image
@@ -265,12 +268,70 @@ const BetAnalyse = ({ plusSmall, plusBig, big, small }: BetAnalyseProps) => {
     </div>
   );
 };
-
+const Header = () => {
+  return (
+    <>
+      <div className="flex items-center justify-between gap-1 mb-3">
+        <div className="flex items-center lg:gap-[53px] gap-3">
+          <div className="flex items-center justify-center w-[12px] h-[12px] sm:w-[18px] sm:h-[18px] md:w-[24px] md:h-[24px] lg:w-[30px] lg:h-[30px]">
+            <Image
+              src={back}
+              alt="Back Icon"
+              priority
+              className="cursor-pointer w-full h-auto"
+            />
+          </div>
+          <div className="lg:text-[57px] md:text-[37px] sm:text-[27px] text-[16px]">
+            HASH Big/Samll
+          </div>
+        </div>
+        <div className="bg-black px-2 py-1 md:rounded-[15px] rounded-[5px] flex items-center gap-2">
+          <div className="flex items-center justify-center  lg:w-[59px] lg:h-[59px] md:w-[39px] md:h-[39px] lg:w-[29px] lg:h-[29px] w-[20px] h-[20px] ">
+            <Image
+              src={binance}
+              alt="Binance Icon"
+              priority
+              className="cursor-pointer w-full h-auto"
+            />
+          </div>
+          <div className="flex items-center justify-center w-[8px] h-[8px] sm:w-[10px] sm:h-[10px] md:w-[12px] md:h-[12px lg:w-[14px] sm:h-[14px]">
+            <Image
+              src={down}
+              alt="Down Icon"
+              priority
+              className="cursor-pointer w-full h-auto"
+            />
+          </div>
+          <div className="lg:text-[54px] md:text-[34px] sm:text-[24px] text-[18px] whitespace-nowra">
+            $ 286699.35
+          </div>
+          <div className="relative">
+            <div className="absolute top-[2px] z-10 lg:w-[67px] lg:h-[67px] md:w-[37px] md:h-[37px] sm:w-[27px] sm:h-[27px] w-[20px] h-[20px] rounded-[3px] bg-[#7ea300]"></div>
+            <div className="relative z-20 lg:w-[67px] lg:h-[67px w-[20px] md:w-[37px] md:h-[37px] sm:w-[27px] sm:h-[27px] h-[20px] ] flex items-center justify-center p-1 bg-[#c3fb04] rounded-[3px]">
+              <Image
+                src={plusGreen}
+                alt="Plust Green Icon"
+                priority
+                className="cursor-pointer w-full h-auto"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="flex items-center w-full mb-12">
+        <div className="flex items-center justify-center rounded-tl-full rounded-bl-full bg-[#4e4f50] w-[50%] text-[#c3fb04] lg:text-[48px] md:text-[38px] sm:text-[24px] text-[16px] py-3">
+          Crypto Betting
+        </div>
+        <div className="flex items-center justify-center rounded-tr-full rounded-br-full bg-[#29292f] w-[50%] text-[#696971] lg:text-[48px] md:text-[38px] sm:text-[24px] text-[16px] py-3">
+          Transfer betting
+        </div>
+      </div>
+    </>
+  );
+};
 const Page = () => {
   return (
-    <div
-      className="flex items-center justify-center min-h-[2000px] bg-[#18181b] font-bahnschrift"
-    >
+    <div className="flex items-center justify-center min-h-[2000px] bg-[#18181b] font-bahnschrift">
       <div className="flex items-center justify-center w-[95%] fixed top-[45px] left-1/2 -translate-x-1/2 z-[100]">
         <Notification
           title="X.GAME Web3 Pioneers"
@@ -278,6 +339,7 @@ const Page = () => {
         />
       </div>
       <div className="flex flex-col h-full w-[95%]">
+        <Header />
         <BetAnalyse
           plusSmall="0.00"
           plusBig="0.00"
