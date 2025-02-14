@@ -1,16 +1,11 @@
 "use client";
 import add from "@/public/add.png";
-import bgNotification from "@/public/bg-notification.png";
 import body from "@/public/body.png";
-import buttonLayoutOne from "@/public/button-layout-1.png";
-import buttonLayoutTwo from "@/public/button-layout-2.png";
 import clock from "@/public/clock.png";
 import close from "@/public/close.png";
 import copy from "@/public/copy.png";
 import folder from "@/public/folder.png";
 import header from "@/public/header.png";
-import layerNotificationTwo from "@/public/layer-notification-2.png";
-import layerNotification from "@/public/layer-notification.png";
 import layer from "@/public/layer.png";
 import left from "@/public/left.png";
 import menu from "@/public/menu.png";
@@ -24,167 +19,137 @@ type PlusProps = {
 };
 const Plus = ({ value }: PlusProps) => {
   return (
-    <div className="flex items-center justify-center bg-black opacity-[27%] rounded-[34px] w-[171px] h-[64px] py-[10px] px[11px] gap-[19px]">
-      <div className="flex items-center justify-center w-[49px] h-[49px] rounded-full bg-[#4e0b1d]">
+    <div className="flex items-center justify-center bg-[#00000044] px-2 py-1 gap-2 rounded-sm md:rounded-md">
+      <div className="flex items-center justify-center rounded-full bg-[#4e0b1d] p-1">
         <Image
           src={plus}
           alt="Plus Icon"
           priority
-          className="cursor-pointer w-[25px] text-[#b13e5e]"
+          className="cursor-pointer lg:w-[25px] md:w-[22px] sm:w-[20px] w-[9px] text-[#b13e5e]"
         />
       </div>
-      <div className="text-[39px] text-[#b46177]">{value}</div>
+      <div className="text-[13px] lg:text-[39px] md:text-[22px] sm:text-[20px] text-[#b46177]">
+        {value}
+      </div>
     </div>
   );
 };
-
-type WingProps = {
-  imageUrl: string;
+type ButtonProps = {
   title: string;
-  value: string;
 };
-
-const Wing = ({ imageUrl, title, value }: WingProps) => {
+const Button = ({ title }: ButtonProps) => {
   return (
-    <div
-      style={{
-        backgroundImage: `url(${imageUrl})`,
-        backgroundRepeat: "no-repeat",
-        width: "100%",
-        height: "294px",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        flexDirection: "column",
-      }}
-    >
-      <div className="text-[72px] text-bold">{title}</div>
-      <div className="text-[48px] text-[#dc8098]">{value}</div>
-    </div>
-  );
-};
-
-const Bet = () => {
-  return (
-    <div className="">
-      <div className="absolute w-[1080px] top-[60px]">
-        <div className="flex items-center justify-center">
-          <Image
-            src={layer}
-            alt="Layer"
-            priority
-            className="absolute z-[10] top-[-60px]"
-          />
-          <Image
-            src={clock}
-            alt="Clock Icon"
-            priority
-            className="cursor-pointer w-[182px] h-[102px] z-[100]"
-          />
-        </div>
-      </div>
-      <div className="absolute w-[1080px] top-[125px] left-[20px]">
-        <div className="flex items-center gap-[28px]">
-          <Wing imageUrl={left.src} title="BIG" value="1 : 1.98" />
-          <Wing imageUrl={right.src} title="SMALL" value="1 : 1.98" />
-        </div>
+    <div className="relative cursor-pointer">
+      <div className="z-10 lg:h-[117px] h-[40px] bg-[#7ea300] lg:rounded-[38px] rounded-[13px] absolute w-full top-[5px] lg:top-[10px]"></div>
+      <div className="z-0 lg:h-[117px] h-[40px] bg-black lg:rounded-[38px] rounded-[13px] absolute w-full border-2 border-[#C3FB04] top-[10px] lg:top-[20px]"></div>
+      <div className="z-30 bg-[#7ea300] lg:w-[13px] w-[5px] lg:h-[40px] h-[18px] rounded-tl-[3px] rounded-bl-[3px] lg:rounded-tl-[8px] lg:rounded-bl-[8px] absolute lg:top-[60px] top-[10px] right-0"></div>
+      <div className="z-30 bg-[#7ea300] lg:w-[13px] w-[5px] lg:h-[40px] h-[18px] rounded-tr-[3px] rounded-br-[3px] lg:rounded-tr-[8px] lg:rounded-br-[8px] absolute lg:top-[60px] top-[10px] left-0"></div>
+      <div className="z-20 relative flex items-center justify-center bg-[#C3FB04] lg:rounded-[38px] rounded-[13px] w-full text-black font-bold lg:text-[60px] text-[20px] lg:h-[117px] h-[40px]">
+        {title}
       </div>
     </div>
   );
 };
-const Body = () => {
+type NotificationProps = {
+  title: string;
+  subTitle: string;
+};
+const Notification = ({ title, subTitle }: NotificationProps) => {
   return (
-    <div className="relative ">
-      <div
-        style={{
-          backgroundImage: `url(${header.src})`,
-          backgroundRepeat: "no-repeat",
-          width: "100%",
-          height: "560px",
-        }}
-      >
-        <div className="flex justify-between items-center w-[1080px] px-[41px] pt-[43px]">
+    <div className="relative w-full">
+      <div className="absolute top-[14px] right-[24px] z-30 lg:top-[24px] lg:right-[34px]">
+        <div className="flex items-center justify-center rounded-full bg-[#2d2d2d] lg:w-[65px] lg:h-[65px] w-[22px] h-[22px]">
           <Image
-            src={folder}
-            alt="Folder Icon"
+            src={close}
+            alt="Close Icon"
             priority
-            className="cursor-pointer w-[38px]"
+            className="w-[45%] h-auto"
           />
-          <div className="flex items-center gap-3">
-            <div className="text-[48px] font-bold">
-              79rufh0IWkie9……dj7hfAhd8
-            </div>
+        </div>
+      </div>
+      <div className="w-full bg-[#29292f] absolute z-0 h-[100px] bottom-[-10px] rounded-lg"></div>
+      <div className="bg-[#68686f] absolute z-10 h-[100px] bottom-[-10px] w-[50%] rounded-bl-lg"></div>
+      <div className="relative z-20 w-full flex items-center justify-start bg-black p-3 min-h-[100px] rounded-lg">
+        <div className="absolute z-10 w-[25%] min-w-[100px]">
+          <div className="w-full h-auto flex items-center justify-center ">
             <Image
-              src={copy}
-              alt="Copy Icon"
+              src={notification}
+              alt="Notification Icon"
               priority
-              className="cursor-pointer w-[34px]"
+              className="w-full h-auto"
             />
           </div>
-          <Image
-            src={menu}
-            alt="Menu Icon"
-            priority
-            className="cursor-pointer w-[48px]"
-          />
         </div>
-        <div className="text-[#CD3E66] w-[1080px] justify-center flex text-[33px]">
-          Our Bureau Prize Hash
-        </div>
-      </div>
-      <div
-        style={{
-          backgroundImage: `url(${body.src})`,
-          backgroundRepeat: "no-repeat",
-          width: "100%",
-          height: "449px",
-          position: "absolute",
-          top: "125px",
-        }}
-      >
-        <div className="w-[1080px] relative">
-          <div className="flex justify-between px-[18px] pt-[23px]">
-            <Plus value={"0.00"} />
-            <Plus value={"0.00"} />
+        <div className="text-left pl-[100px] sm:pl-[150px] md:pl-[200px] lg:pl-[250px]">
+          <div className="font-bold lg:text-[45px] md:text-[35px] sm:text-[25px] text-[15px] text-[#bff701] md:mb-[24px]">
+            {title}
           </div>
-          <Bet />
+          <div className="lg:text-[39px] md:text-[33px] sm:text-[23px] text-[13px]">
+            {subTitle}
+          </div>
         </div>
       </div>
-      <div className="flex items-center justify-between w-[1080px] px-[21px] pt-[41px]">
-        <div>
-          <div>
-            <span className="text-[33px] text-[#75757f] mr-1">
+    </div>
+  );
+};
+type InputBetProps = {
+  betLimit: string;
+  maximumWin: string;
+};
+
+const InputBet = ({ betLimit, maximumWin }: InputBetProps) => {
+  return (
+    <div className="relative w-full">
+      <div className="flex justify-between items-center lg:gap-[48px] gap-[20px]">
+        <div className="relative">
+          <div className="whitespace-nowrap">
+            <span className="text-[11px] lg:text-[33px] text-[#75757f] mr-1 whitespace-nowrap">
               Betting Limits:
             </span>
-            <span className="text-[39px] text-[#c5c5cf]">10~200,000</span>
+            <span className="text-[13px] lg:text-[39px] text-[#c5c5cf] whitespace-nowrap">
+              {betLimit}
+            </span>
           </div>
-          <div>
-            <span className="text-[33px] text-[#75757f] mr-1">
+          <div className="whitespace-nowrap">
+            <span className="text-[11px] lg:text-[33px] text-[#75757f] mr-1 whitespace-nowrap">
               Maximum Win:
             </span>
-            <span className="text-[39px] text-[#c5c5cf]"> 0.00</span>
+            <span className="text-[13px] lg:text-[39px] text-[#c5c5cf] whitespace-nowrap">
+              {maximumWin}
+            </span>
           </div>
         </div>
-        <div className="relative">
+        <div className="relative lg:max-w-[519px] max-w-[250px] flex-grow">
           <input
             placeholder="Bet Amount"
             type="text"
-            className="px-[170px] py-[36px] w-[519px] h-[98px] rounded-[20px] bg-[#131314] border-[#29292F] placeholder:text-[#2e2e2e] border-[2px] text-[33px] relative"
+            className="h-[40px] text-[11px] rounded-sm w-full lg:h-[98px] lg:text-[33px] bg-[#131314] border-[#29292F] 
+               placeholder:text-[#2e2e2e] border-[2px] relative text-center px-30 lg:px-[70px]"
           />
-          <div className="flex items-center justify-center w-[64px] h-[64px] rounded-[16px] bg-[#29292f] absolute top-[17px] left-[19px] cursor-pointer">
+          <div
+            className="flex items-center justify-center w-[28px] h-[28px]
+             rounded-[6px] lg:w-[64px] lg:h-[64px] lg:rounded-[16px] bg-[#29292f] 
+             absolute top-[6px] lg:top-[17px] left-[10px] lg:left-[19px] 
+             cursor-pointer"
+          >
             <Image
               src={minus}
               alt="Minus Icon"
               priority
-              className="cursor-pointer w-[27px] text-[#68686f]"
+              className="cursor-pointer w-[45%] h-auto text-[#68686f]"
             />
           </div>
-          <div className="flex items-center justify-center w-[64px] h-[64px] rounded-[16px] bg-[#29292f] absolute top-[17px] right-[19px] cursor-pointer">
+          <div
+            className="flex items-center justify-center w-[28px] h-[28px]
+                        rounded-[6px] lg:w-[64px] lg:h-[64px] lg:rounded-[16px] bg-[#29292f] 
+                        absolute top-[6px] lg:top-[17px] right-[10px] lg:right-[19px] 
+                        cursor-pointer"
+          >
             <Image
               src={add}
               alt="Add Icon"
               priority
-              className="cursor-pointer w-[27px] text-[#68686f]"
+              className="cursor-pointer w-[45%] h-auto text-[#68686f]"
             />
           </div>
         </div>
@@ -193,79 +158,141 @@ const Body = () => {
   );
 };
 
-const Notification = () => {
+type BetAnalyseProps = {
+  plusSmall: string;
+  plusBig: string;
+  big: string;
+  small: string;
+};
+
+const BetAnalyse = ({ plusSmall, plusBig, big, small }: BetAnalyseProps) => {
   return (
-    <div className="flex items-center justify-center w-screen ">
-      <div>
-        <div className="absolute top-[120px]">
-          <Image src={layerNotification} alt="Layer Notification" priority />
+    <div className="relative w-full h-[350px] md:h-[550px] lg:h-[700px]">
+      <div className="absolute w-full h-full">
+        <Image
+          src={header}
+          alt="Header Icon"
+          className="w-full h-auto absolute top-0 z-0"
+        />
+        <Image
+          src={body}
+          alt="Body Icon"
+          className="w-full h-auto absolute top-[50px] z-10 sm:top-[70px] md:top-[100px] lg:top-[120px]"
+        />
+        <Image
+          src={layer}
+          alt="Layer"
+          priority
+          className="w-full h-auto absolute top-[50px] sm:top-[70px] md:top-[100px] lg:top-[120px] z-20"
+        />
+        <div className="absolute top-[70px] sm:top-[110px] md:top-[150px] lg:top-[170px] z-30 w-full">
+          <div className="flex items-center justify-center w-full">
+            <Image
+              src={clock}
+              alt="Clock Icon"
+              priority
+              className="w-[18%] h-auto max-w-[186px]"
+            />
+          </div>
         </div>
-        <div className="absolute top-[120px]">
-          <Image src={layerNotificationTwo} alt="Layer Notification" priority />
+        <div className="relative top-[95px] sm:top-[170px] md:top-[210px] lg:top-[240px] z-30 w-full">
+          <div className="flex items-center justify-between gap-4 px-4 sm:gap-12 sm:px-6">
+            <div className="relative w-full">
+              <Image src={left} alt="Wing Icon" className="w-full h-auto" />
+              <div className="absolute inset-0 flex items-center justify-center flex-col text-center">
+                <div className="lg:text-[72px] md:text-[52px] sm:text-[32px] text-[24px] font-bold">
+                  BIG
+                </div>
+                <div className="lg:text-[48px] md:text-[38px] sm:text-[28px] text-[16px] text-[#dc8098]">
+                  {big}
+                </div>
+              </div>
+            </div>
+            <div className="relative w-full">
+              <Image src={right} alt="Wing Icon" className="w-full h-auto" />
+              <div className="absolute inset-0 flex items-center justify-center flex-col text-center">
+                <div className="lg:text-[72px] md:text-[52px] sm:text-[32px] text-[24px] font-bold">
+                  SMALL
+                </div>
+                <div className="lg:text-[48px] md:text-[38px] sm:text-[28px] text-[16px] text-[#dc8098]">
+                  {small}
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-      <div
-        style={{
-          backgroundImage: `url(${bgNotification.src})`,
-          backgroundRepeat: "no-repeat",
-          width: "1080px",
-          height: "222px",
-          position: "relative",
-        }}
-      >
-        <div className="absolute top-[-35px]">
-          <Image src={notification} alt="Notification Icon" priority />
+      <div className="absolute insect-0 w-full h-[250px] sm:h-[350px] md:h-[470px] lg:h-[570px] z-50">
+        <div className="flex items-center justify-between gap-6 w-full lg:px-[40px] px-[20px] lg:pt-[40px] pt-[20px]">
+          <div className="lg:w-[38px] md:w-[30px] sm:w-[25px] w-[13px]">
+            <Image
+              src={folder}
+              alt="Folder Icon"
+              priority
+              className="cursor-pointer w-full h-auto min-w-[13px]"
+            />
+          </div>
+          <div className="flex items-center lg:gap-6 gap-3">
+            <div className="lg:text-[48px] md:text-[35px] sm:text-[28px] font-bold text-[16px] whitespace-nowrap">
+              79rufh0IWkie9……dj7hfAhd8
+            </div>
+            <div className="lg:w-[34px] md:w-[28px] sm:w-[23px] w-[11px]">
+              <Image
+                src={copy}
+                alt="Copy Icon"
+                priority
+                className="cursor-pointer w-full h-auto"
+              />
+            </div>
+          </div>
+          <div className="lg:w-[48px] md:w-[38px] sm:w-[32px] w-[16px]">
+            <Image
+              src={menu}
+              alt="Menu Icon"
+              priority
+              className="cursor-pointer w-full h-auto min-w-[16px]"
+            />
+          </div>
         </div>
-        <div className="pt-[35px] pl-[300px] pr-[100px]">
-          <div className="text-[45px] font-bold text-[#bff701]">
-            X.GAME Web3 Pioneers
-          </div>
-          <div className="text-[39px]">
-            Hash games, blockchain gameplay is fairer and verifiable!
-          </div>
+        <div className="flex items-center justify-center text-[#CD3E66] lg:text-[33px] md:text-[27px] sm:[23px] text-[11px] ">
+          Our Bureau Prize Hash
         </div>
-
-        <div className="absolute top-[14px] right-[11px]">
-          <div className="flex items-center justify-center w-[65px] h-[65px] rounded-full bg-[#2d2d2d] cursor-pointe">
-            <Image src={close} alt="Close Icon" priority />
-          </div>
+        <div className="flex items-center justify-between lg:px-[40px] px-[15px]">
+          <Plus value={plusSmall} />
+          <Plus value={plusBig} />
         </div>
       </div>
     </div>
   );
 };
 
-export default function Home() {
+const Page = () => {
   return (
     <div
-      className="bg-[#18181b] relative"
-      style={{ fontFamily: "Bahnschrift" }}
+      className="flex items-center justify-center min-h-[2000px] bg-[#18181b] font-bahnschrift"
     >
-      <div className="absolute top-[55px]">
-        <div className="w-screen flex justify-center items-center">
-          <Notification />
-        </div>
+      <div className="flex items-center justify-center w-[95%] fixed top-[45px] left-1/2 -translate-x-1/2 z-[100]">
+        <Notification
+          title="X.GAME Web3 Pioneers"
+          subTitle="Hash games, blockchain gameplay is fairer and verifiable!"
+        />
       </div>
-      <div className="flex items-center justify-center w-screen h-[1500px]">
-        <Body />
+      <div className="flex flex-col h-full w-[95%]">
+        <BetAnalyse
+          plusSmall="0.00"
+          plusBig="0.00"
+          big="1 : 1.98"
+          small="1 : 1.98"
+        />
+        <InputBet betLimit="10~200,000" maximumWin="0.00" />
       </div>
-      <div className="absolute bottom-[55px]">
-        <div className="w-screen flex justify-center items-center cursor-pointer">
-          <Image
-            src={buttonLayoutOne}
-            alt="Minus Icon"
-            priority
-            className="z-[10]"
-          />
-          <div className="z-[100] absolute text-[60px] text-black">BET</div>
-          <Image
-            src={buttonLayoutTwo}
-            alt="Minus Icon"
-            priority
-            className="absolute top-[10px]"
-          />
+      <div className="flex items-center justify-center w-[95%] fixed bottom-[45px] left-1/2 -translate-x-1/2 z-[100]">
+        <div className="w-[60%]">
+          <Button title="BET" />
         </div>
       </div>
     </div>
   );
-}
+};
+
+export default Page;
