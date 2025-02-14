@@ -1,6 +1,28 @@
 {
   "HomePage": {
-    "title ": "Hello World",
-    "about ": "Go to the about page"
+    "title": "Hello World",
+    "about": "Go to the about page",
+    "notification": {
+      "title": "X.GAME Web3 Pioneers",
+      "subtitle": "Hash games, blockchain gameplay is fairer and verifiable!"
+    },
+    "header": {
+      "gameTitle": "HASH Big/Small",
+      "cryptoBetting": "Crypto Betting",
+      "transferBetting": "Transfer betting"
+    },
+    "betAnalyse": {
+      "big": "BIG",
+      "small": "SMALL",
+      "ourBureauPrizeHash": "Our Bureau Prize Hash"
+    },
+    "inputBet": {
+      "placeholder": "Bet Amount",
+      "bettingLimits": "Betting Limits:",
+      "maximumWin": "Maximum Win:"
+    },
+    "button": {
+      "bet": "BET"
+    }
   }
 }

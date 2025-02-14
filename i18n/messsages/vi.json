@@ -1,0 +1,28 @@
+{
+  "HomePage": {
+    "title": "Chào thế giới",
+    "about": "Đi tới trang giới thiệu",
+    "notification": {
+      "title": "X.GAME Web3 Pioneers",
+      "subtitle": "Trò chơi Hash, lối chơi blockchain công bằng và có thể xác minh hơn!"
+    },
+    "header": {
+      "gameTitle": "HASH Lớn/Nhỏ",
+      "cryptoBetting": "Cược Crypto",
+      "transferBetting": "Cược chuyển khoản"
+    },
+    "betAnalyse": {
+      "big": "LỚN",
+      "small": "NHỎ",
+      "ourBureauPrizeHash": "Hash Giải Thưởng Của Chúng Tôi"
+    },
+    "inputBet": {
+      "placeholder": "Số Tiền Cược",
+      "bettingLimits": "Giới Hạn Cược:",
+      "maximumWin": "Thắng Tối Đa:"
+    },
+    "button": {
+      "bet": "ĐẶT CƯỢC"
+    }
+  }
+}

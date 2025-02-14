@@ -39,17 +39,21 @@ const Plus = ({ value }: PlusProps) => {
   );
 };
 type ButtonProps = {
-  title: string;
+  titleKey?: string;
+  title?: string;
 };
-const Button = ({ title }: ButtonProps) => {
+const Button = ({ titleKey = "button.bet", title }: ButtonProps) => {
+  const t = useTranslations("HomePage");
+  const displayTitle = title || t(titleKey);
+  
   return (
     <div className="relative cursor-pointer">
-      <div className="z-10 lg:h-[117px] h-[40px] bg-[#7ea300] lg:rounded-[38px] rounded-[13px] absolute w-full top-[5px] lg:top-[10px]"></div>
-      <div className="z-0 lg:h-[117px] h-[40px] bg-black lg:rounded-[38px] rounded-[13px] absolute w-full border-2 border-[#C3FB04] top-[10px] lg:top-[20px]"></div>
-      <div className="z-30 bg-[#7ea300] lg:w-[13px] w-[5px] lg:h-[40px] h-[18px] rounded-tl-[3px] rounded-bl-[3px] lg:rounded-tl-[8px] lg:rounded-bl-[8px] absolute lg:top-[60px] top-[10px] right-0"></div>
-      <div className="z-30 bg-[#7ea300] lg:w-[13px] w-[5px] lg:h-[40px] h-[18px] rounded-tr-[3px] rounded-br-[3px] lg:rounded-tr-[8px] lg:rounded-br-[8px] absolute lg:top-[60px] top-[10px] left-0"></div>
-      <div className="z-20 relative flex items-center justify-center bg-[#C3FB04] lg:rounded-[38px] rounded-[13px] w-full text-black font-bold lg:text-[60px] text-[20px] lg:h-[117px] h-[40px]">
-        {title}
+      <div className="z-10 lg:h-[117px] h-[40px] lg:rounded-[38px] rounded-[13px] bg-[#7ea300] md:h-[80px] md:rounded-[28px] sm:h-[60px] sm:rounded-[25px] absolute w-full top-[5px] lg:top-[10px]"></div>
+      <div className="z-0 lg:h-[117px] h-[40px] lg:rounded-[38px] rounded-[13px]  md:h-[80px] md:rounded-[28px] sm:h-[60px] sm:rounded-[25px] bg-black absolute w-full border-2 border-[#C3FB04] top-[10px] lg:top-[20px]"></div>
+      <div className="z-30 bg-[#7ea300] lg:w-[13px] md:w-[10px] sm:w-[8px] w-[5px] lg:h-[40px] md:h-[30px] sm:h-[25px] h-[18px] rounded-tl-[3px] rounded-bl-[3px] lg:rounded-tl-[8px] lg:rounded-bl-[8px] md:rounded-tl-[7px] md:rounded-bl-[7px] sm:rounded-tl-[6px] sm:rounded-bl-[6px] lg:top-[40px] top-[10px] absolute right-0 sm:top-[17px] md:top-[25px]"></div>
+      <div className="z-30 bg-[#7ea300] lg:w-[13px] md:w-[10px] sm:w-[8px] w-[5px] lg:h-[40px] md:h-[30px] sm:h-[25px] h-[18px] rounded-tr-[3px] rounded-br-[3px] lg:rounded-tr-[8px] lg:rounded-br-[8px] md:rounded-tr-[7px] md:rounded-br-[7px] sm:rounded-tr-[6px] sm:rounded-br-[6px] lg:top-[40px] top-[10px] absolute left-0 sm:top-[17px] md:top-[25px]"></div>
+      <div className="z-20 relative flex items-center justify-center bg-[#C3FB04] w-full text-black font-bold lg:text-[60px] lg:h-[117px] lg:rounded-[38px] md:text-[48px] md:h-[80px] md:rounded-[28px] sm:text-[38px] sm:h-[60px] sm:rounded-[25px] text-[20px] h-[40px] rounded-[13px]">
+        {displayTitle}
       </div>
     </div>
   );
@@ -101,39 +105,42 @@ type InputBetProps = {
 };
 
 const InputBet = ({ betLimit, maximumWin }: InputBetProps) => {
+  const t = useTranslations("HomePage");
+  
   return (
     <div className="relative w-full">
-      <div className="flex justify-between items-center lg:gap-[48px] gap-[20px]">
+      <div className="flex justify-between items-center lg:gap-[48px] md:gap-[38px] sm:gap-[28px] gap-[20px]">
         <div className="relative">
           <div className="whitespace-nowrap">
-            <span className="text-[11px] lg:text-[33px] text-[#75757f] mr-1 whitespace-nowrap">
-              Betting Limits:
+            <span className="text-[11px] sm:text-[16px] md:text-[25px] lg:text-[33px] text-[#75757f] mr-1 whitespace-nowrap">
+              {t("inputBet.bettingLimits")}
             </span>
-            <span className="text-[13px] lg:text-[39px] text-[#c5c5cf] whitespace-nowrap">
+            <span className="text-[13px] sm:text-[18px] md:text-[27px] lg:text-[39px] text-[#c5c5cf] whitespace-nowrap">
               {betLimit}
             </span>
           </div>
           <div className="whitespace-nowrap">
-            <span className="text-[11px] lg:text-[33px] text-[#75757f] mr-1 whitespace-nowrap">
-              Maximum Win:
+            <span className="text-[11px] sm:text-[16px] md:text-[25px] lg:text-[33px] text-[#75757f] mr-1 whitespace-nowrap">
+              {t("inputBet.maximumWin")}
             </span>
-            <span className="text-[13px] lg:text-[39px] text-[#c5c5cf] whitespace-nowrap">
+            <span className="text-[13px] sm:text-[18px] md:text-[27px] lg:text-[39px] text-[#c5c5cf] whitespace-nowrap">
               {maximumWin}
             </span>
           </div>
         </div>
-        <div className="relative lg:max-w-[519px] max-w-[250px] flex-grow">
+        <div className="relative lg:max-w-[519px] md:max-w-[400px] sm:max-w-[350px] max-w-[250px] flex-grow">
           <input
-            placeholder="Bet Amount"
+            placeholder={t("inputBet.placeholder")}
             type="text"
-            className="h-[40px] text-[11px] rounded-sm w-full lg:h-[98px] lg:text-[33px] bg-[#131314] border-[#29292F] 
-               placeholder:text-[#2e2e2e] border-[2px] relative text-center px-30 lg:px-[70px]"
+            className="h-[40px] text-[11px] px-30 lg:px-[98px] lg:h-[98px] lg:text-[33px] md:px-[75px] md:h-[75px] md:text-[28px] sm:px-[60px] sm:h-[60px] sm:text-[25px]
+               placeholder:text-[#2e2e2e] border-[2px] relative text-center rounded-sm w-full bg-[#131314] border-[#29292F]"
           />
           <div
-            className="flex items-center justify-center w-[28px] h-[28px]
-             rounded-[6px] lg:w-[64px] lg:h-[64px] lg:rounded-[16px] bg-[#29292f] 
-             absolute top-[6px] lg:top-[17px] left-[10px] lg:left-[19px] 
-             cursor-pointer"
+            className="w-[28px] h-[28px] top-[6px] left-[10px] rounded-[6px]
+            lg:w-[64px] lg:h-[64px] lg:rounded-[16px] lg:top-[17px] lg:left-[19px] 
+            md:w-[54px] md:h-[54px] md:rounded-[14px] md:top-[10px] md:left-[17px]
+            sm:w-[44px] sm:h-[44px] sm:rounded-[12px] sm:top-[8px] sm:left-[15px]
+            absolute flex items-center justify-center cursor-pointer bg-[#29292f]"
           >
             <Image
               src={minus}
@@ -143,10 +150,11 @@ const InputBet = ({ betLimit, maximumWin }: InputBetProps) => {
             />
           </div>
           <div
-            className="flex items-center justify-center w-[28px] h-[28px]
-                        rounded-[6px] lg:w-[64px] lg:h-[64px] lg:rounded-[16px] bg-[#29292f] 
-                        absolute top-[6px] lg:top-[17px] right-[10px] lg:right-[19px] 
-                        cursor-pointer"
+            className="w-[28px] h-[28px] top-[6px] right-[10px] rounded-[6px]
+            lg:w-[64px] lg:h-[64px] lg:rounded-[16px] lg:top-[17px] lg:right-[19px] 
+            md:w-[54px] md:h-[54px] md:rounded-[14px] md:top-[10px] md:right-[17px]
+            sm:w-[44px] sm:h-[44px] sm:rounded-[12px] sm:top-[8px] sm:right-[15px]
+            absolute flex items-center justify-center cursor-pointer bg-[#29292f]"
           >
             <Image
               src={add}
@@ -169,8 +177,10 @@ type BetAnalyseProps = {
 };
 
 const BetAnalyse = ({ plusSmall, plusBig, big, small }: BetAnalyseProps) => {
+  const t = useTranslations("HomePage");
+  
   return (
-    <div className="relative w-full h-[350px] md:h-[550px] lg:h-[700px]">
+    <div className="relative w-full h-[350px] sm:h-[450px] md:h-[550px] lg:h-[700px]">
       <div className="absolute w-full h-full">
         <Image
           src={header}
@@ -204,7 +214,7 @@ const BetAnalyse = ({ plusSmall, plusBig, big, small }: BetAnalyseProps) => {
               <Image src={left} alt="Wing Icon" className="w-full h-auto" />
               <div className="absolute inset-0 flex items-center justify-center flex-col text-center">
                 <div className="lg:text-[72px] md:text-[52px] sm:text-[32px] text-[24px] font-bold">
-                  BIG
+                  {t("betAnalyse.big")}
                 </div>
                 <div className="lg:text-[48px] md:text-[38px] sm:text-[28px] text-[16px] text-[#dc8098]">
                   {big}
@@ -215,7 +225,7 @@ const BetAnalyse = ({ plusSmall, plusBig, big, small }: BetAnalyseProps) => {
               <Image src={right} alt="Wing Icon" className="w-full h-auto" />
               <div className="absolute inset-0 flex items-center justify-center flex-col text-center">
                 <div className="lg:text-[72px] md:text-[52px] sm:text-[32px] text-[24px] font-bold">
-                  SMALL
+                  {t("betAnalyse.small")}
                 </div>
                 <div className="lg:text-[48px] md:text-[38px] sm:text-[28px] text-[16px] text-[#dc8098]">
                   {small}
@@ -258,7 +268,7 @@ const BetAnalyse = ({ plusSmall, plusBig, big, small }: BetAnalyseProps) => {
           </div>
         </div>
         <div className="flex items-center justify-center text-[#CD3E66] lg:text-[33px] md:text-[27px] sm:[23px] text-[11px] ">
-          Our Bureau Prize Hash
+          {t("betAnalyse.ourBureauPrizeHash")}
         </div>
         <div className="flex items-center justify-between lg:px-[40px] px-[15px]">
           <Plus value={plusSmall} />
@@ -269,6 +279,8 @@ const BetAnalyse = ({ plusSmall, plusBig, big, small }: BetAnalyseProps) => {
   );
 };
 const Header = () => {
+  const t = useTranslations("HomePage");
+  
   return (
     <>
       <div className="flex items-center justify-between gap-1 mb-3">
@@ -282,11 +294,11 @@ const Header = () => {
             />
           </div>
           <div className="lg:text-[57px] md:text-[37px] sm:text-[27px] text-[16px]">
-            HASH Big/Samll
+            {t("header.gameTitle")}
           </div>
         </div>
         <div className="bg-black px-2 py-1 md:rounded-[15px] rounded-[5px] flex items-center gap-2">
-          <div className="flex items-center justify-center  lg:w-[59px] lg:h-[59px] md:w-[39px] md:h-[39px] lg:w-[29px] lg:h-[29px] w-[20px] h-[20px] ">
+          <div className="flex items-center justify-center lg:w-[59px] lg:h-[59px] md:w-[39px] md:h-[39px] sm:w-[29px] sm:h-[29px] w-[20px] h-[20px] ">
             <Image
               src={binance}
               alt="Binance Icon"
@@ -306,13 +318,13 @@ const Header = () => {
             $ 286699.35
           </div>
           <div className="relative">
-            <div className="absolute top-[2px] z-10 lg:w-[67px] lg:h-[67px] md:w-[37px] md:h-[37px] sm:w-[27px] sm:h-[27px] w-[20px] h-[20px] rounded-[3px] bg-[#7ea300]"></div>
-            <div className="relative z-20 lg:w-[67px] lg:h-[67px w-[20px] md:w-[37px] md:h-[37px] sm:w-[27px] sm:h-[27px] h-[20px] ] flex items-center justify-center p-1 bg-[#c3fb04] rounded-[3px]">
+            <div className="absolute top-[2px] z-10 lg:w-[50px] lg:h-[50px] md:w-[37px] md:h-[37px] sm:w-[27px] sm:h-[27px] w-[20px] h-[20px] rounded-[3px] bg-[#7ea300]"></div>
+            <div className="relative z-20 lg:w-[50px] lg:h-[50px] w-[20px] md:w-[37px] md:h-[37px] sm:w-[27px] sm:h-[27px] h-[20px] ] flex items-center justify-center p-1 bg-[#c3fb04] rounded-[3px]">
               <Image
                 src={plusGreen}
                 alt="Plust Green Icon"
                 priority
-                className="cursor-pointer w-full h-auto"
+                className="cursor-pointer w-full h-auto max-w-[25px]"
               />
             </div>
           </div>
@@ -320,22 +332,26 @@ const Header = () => {
       </div>
       <div className="flex items-center w-full mb-12">
         <div className="flex items-center justify-center rounded-tl-full rounded-bl-full bg-[#4e4f50] w-[50%] text-[#c3fb04] lg:text-[48px] md:text-[38px] sm:text-[24px] text-[16px] py-3">
-          Crypto Betting
+          {t("header.cryptoBetting")}
         </div>
         <div className="flex items-center justify-center rounded-tr-full rounded-br-full bg-[#29292f] w-[50%] text-[#696971] lg:text-[48px] md:text-[38px] sm:text-[24px] text-[16px] py-3">
-          Transfer betting
+          {t("header.transferBetting")}
         </div>
       </div>
     </>
   );
 };
+import { useTranslations } from "next-intl";
+
 const Page = () => {
+  const t = useTranslations("HomePage");
   return (
     <div className="flex items-center justify-center min-h-[2000px] bg-[#18181b] font-bahnschrift">
+      <h1>{t("title")}</h1>
       <div className="flex items-center justify-center w-[95%] fixed top-[45px] left-1/2 -translate-x-1/2 z-[100]">
         <Notification
-          title="X.GAME Web3 Pioneers"
-          subTitle="Hash games, blockchain gameplay is fairer and verifiable!"
+          title={t("notification.title")}
+          subTitle={t("notification.subtitle")}
         />
       </div>
       <div className="flex flex-col h-full w-[95%]">
@@ -350,7 +366,7 @@ const Page = () => {
       </div>
       <div className="flex items-center justify-center w-[95%] fixed bottom-[45px] left-1/2 -translate-x-1/2 z-[100]">
         <div className="w-[60%]">
-          <Button title="BET" />
+          <Button />
         </div>
       </div>
     </div>
