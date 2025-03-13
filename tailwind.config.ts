@@ -9,10 +9,6 @@ const config: Config = {
   theme: {
     extend: {
       darkMode: 'class',
-      colors: {
-        background: "var(--background)",
-        foreground: "var(--foreground)",
-      },
     },
   },
   plugins: [],
