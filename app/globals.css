@@ -1,3 +1,41 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+.ant-layout-header {
+  padding: 0 24px;
+}
+
+.ant-menu-light,
+.ant-menu-light > .ant-menu {
+  background: unset;
+}
+
+.ant-menu-light.ant-menu-root.ant-menu-inline,
+.ant-menu-light > .ant-menu.ant-menu-root.ant-menu-inline,
+.ant-menu-light.ant-menu-root.ant-menu-vertical,
+.ant-menu-light > .ant-menu.ant-menu-root.ant-menu-vertical {
+  border: none;
+}
+
+.ant-menu-light.ant-menu-inline .ant-menu-sub.ant-menu-inline,
+.ant-menu-light > .ant-menu.ant-menu-inline .ant-menu-sub.ant-menu-inline {
+  background: unset;
+}
+
+.ant-layout-sider .ant-layout-sider-trigger {
+  background: unset;
+  color: unset;
+}
+.ant-menu-horizontal {
+  border-bottom: none;
+}
+.ant-menu-light.ant-menu-horizontal > .ant-menu-item::after,
+.ant-menu-light > .ant-menu.ant-menu-horizontal > .ant-menu-item::after,
+.ant-menu-light.ant-menu-horizontal > .ant-menu-submenu::after,
+.ant-menu-light > .ant-menu.ant-menu-horizontal > .ant-menu-submenu::after {
+  bottom: 12px;
+}
+.ant-drawer .ant-drawer-footer{
+  padding: 16px 24px;
+  border-top: none;
+}

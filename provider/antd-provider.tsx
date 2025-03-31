@@ -3,8 +3,9 @@ import { AntdRegistry } from "@ant-design/nextjs-registry";
 import ConfigProvider from "antd/es/config-provider";
 import antdTheme from "antd/es/theme";
 import { useTheme } from "next-themes";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { ThemeConfig } from "antd";
+import { theme as themeAntd } from "antd";
 
 type ThemeNames =
   | "Blue"
@@ -54,6 +55,7 @@ export const AntdThemes: AntdThemes = {
     },
   },
 };
+
 const AntdProvider = ({
   children,
 }: Readonly<{
@@ -61,24 +63,46 @@ const AntdProvider = ({
 }>) => {
   const { theme } = useTheme();
   const [mounted, setMounted] = useState(false);
+  const customTheme = useMemo(() => {
+    return {
+      ...AntdThemes.Orange,
+      algorithm:
+        theme === "dark" ? antdTheme.darkAlgorithm : antdTheme.defaultAlgorithm,
+    };
+  }, [theme]);
+
   useEffect(() => {
     setMounted(true);
   }, []);
+
   if (!mounted) return null;
+
   return (
     <AntdRegistry>
-      <ConfigProvider
-        theme={{
-          ...AntdThemes.Orange,
-          algorithm:
-            theme === "dark"
-              ? antdTheme.darkAlgorithm
-              : antdTheme.defaultAlgorithm,
-        }}
-      >
-        {children}
+      <ConfigProvider theme={customTheme}>
+        <ThemeConsumer>{children}</ThemeConsumer>
       </ConfigProvider>
     </AntdRegistry>
   );
 };
+
+const ThemeConsumer = ({ children }: { children: React.ReactNode }) => {
+  const { token } = themeAntd.useToken();
+
+  const themeConfig = useMemo(
+    () => ({
+      token,
+      components: {
+        Layout: {
+          headerBg: token.colorBgContainer,
+          siderBg: token.colorBgContainer,
+        }
+      },
+    }),
+    [token]
+  );
+
+  return <ConfigProvider theme={themeConfig}>{children}</ConfigProvider>;
+};
+
 export default AntdProvider;
