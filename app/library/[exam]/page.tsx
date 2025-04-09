@@ -1,18 +1,19 @@
 "use client";
-import { UploadFile } from "@/component/ui/upload-file";
-import { PlusOutlined, SaveOutlined, UploadOutlined } from "@ant-design/icons";
+import { PlusOutlined, SaveOutlined } from "@ant-design/icons";
 import {
   Button,
   Drawer,
   Tabs,
   Form,
-  Upload,
+  UploadFile as UploadFilePros,
   Row,
   Col,
-  UploadFile as UploadFilePros,
 } from "antd";
 import React, { useState } from "react";
-const { TabPane } = Tabs;
+import { UploadFile as AntdUploadFile } from "antd/es/upload/interface";
+import { UploadFile } from "@/component/ui/upload-file";
+import { Worker, Viewer } from "@react-pdf-viewer/core";
+import "@react-pdf-viewer/core/lib/styles/index.css";
 
 type AnswerProps = {
   id: string;
@@ -43,8 +44,9 @@ type ExamRequestDto = {
 const Page = () => {
   const [open, setOpen] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
-  const [openAnswer, setOpenAnswer] = useState(false);
   const [form] = Form.useForm<ExamRequestDto>();
+  const [fileUrl, setFileUrl] = useState<string | null>(null);
+
   const showDrawer = () => {
     setOpen(true);
   };
@@ -53,22 +55,11 @@ const Page = () => {
     setOpen(false);
   };
 
-  const showChildrenDrawer = () => {
-    setOpenAnswer(true);
-  };
+  const handleSubmit = async (values: ExamRequestDto) => {};
 
-  const handleSubmit = async (values: any) => {
-    setLoading(true);
-    try {
-      // Simulate an async operation
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-      console.log("Form values:", values);
-      // Handle form submission
-    } catch (error) {
-      console.error("Error submitting form:", error);
-    } finally {
-      setLoading(false);
-    }
+  const handleFileUpload = (file: AntdUploadFile) => {
+    const url = URL.createObjectURL(file.originFileObj as Blob);
+    setFileUrl(url);
   };
   return (
     <>
@@ -97,29 +88,59 @@ const Page = () => {
         }
       >
         <Form layout="vertical" onFinish={handleSubmit} id="examForm">
-          <Tabs defaultActiveKey="1" type="card">
-            <TabPane tab="Listening" key="1">
-              <Form.Item name="audio" className="flex justify-center">
-                <Upload accept=".mp3,.wav">
-                  <Button
-                    icon={<UploadOutlined />}
-                    type="dashed"
-                    className="w-[150px]"
-                  >
-                    Upload Audio
-                  </Button>
-                </Upload>
-              </Form.Item>
-              <Row gutter={[16, 16]}>
-                <Col span={12}>
-                  <UploadFile />
-                </Col>
-              </Row>
-            </TabPane>
-            <TabPane tab="Speaking" key="2"></TabPane>
-            <TabPane tab="Reading" key="3"></TabPane>
-            <TabPane tab="Writing" key="4"></TabPane>
-          </Tabs>
+          <Tabs
+            defaultActiveKey="1"
+            type="card"
+            items={[
+              {
+                key: "1",
+                label: "Listening",
+                children: (
+                  <>
+                    <Row justify="center" className="mb-4">
+                      <UploadFile isDragger={false} accept=".mp3,.wav" />
+                    </Row>
+                    <Row gutter={[16, 16]}>
+                      <Col span={12} className="h-[calc(100vh-273px)]">
+                        {fileUrl ? (
+                          <div className="h-full max-h-[calc(100vh-273px)]">
+                            <Worker
+                              workerUrl={`https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js`}
+                            >
+                              <Viewer fileUrl={fileUrl} />
+                            </Worker>
+                          </div>
+                        ) : (
+                          <UploadFile
+                            isDragger={true}
+                            accept=".pdf"
+                            onChange={(info) => handleFileUpload(info.file)}
+                          />
+                        )}
+                      </Col>
+                      <Col span={12}>
+                      </Col>
+                    </Row>
+                  </>
+                ),
+              },
+              {
+                key: "2",
+                label: "Speaking",
+                children: <div>Speaking Content</div>,
+              },
+              {
+                key: "3",
+                label: "Reading",
+                children: <div>Reading Content</div>,
+              },
+              {
+                key: "4",
+                label: "Writing",
+                children: <div>Writing Content</div>,
+              },
+            ]}
+          />
         </Form>
       </Drawer>
     </>

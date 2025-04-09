@@ -14,6 +14,14 @@ import { useTheme } from "next-themes";
 import type { MenuInfo } from "rc-menu/es/interface";
 import { useRouter } from "next/navigation";
 import React from "react";
+import { ItemType, MenuItemType } from "antd/es/menu/interface";
+
+const items: ItemType<MenuItemType>[] = [
+  { label: "Speaking Club", key: "speaking-club" },
+  { label: "Library", key: "library" },
+  { label: "Analysis", key: "analysis" },
+];
+
 export default function header() {
   const t = useTranslations("HomePage");
   const router = useRouter();
@@ -35,6 +43,7 @@ export default function header() {
       }));
     });
   };
+  
   return (
     <Header className="flex justify-between items-center gap-4">
       <h3 className="text-3xl font-bold bg-gradient-to-r from-[#FF7E5F] to-[#FFB88C] bg-clip-text text-transparent">
@@ -44,11 +53,8 @@ export default function header() {
         mode="horizontal"
         className="flex justify-center flex-grow"
         onClick={handleMenuClick}
-      >
-        <Menu.Item key="speaking-club">Speaking Club</Menu.Item>
-        <Menu.Item key="library">Library</Menu.Item>
-        <Menu.Item key="analysis">Analysis</Menu.Item>
-      </Menu>
+        items={items}
+      />
       <div className="w-[300px]">
         <AutoComplete
           style={{ width: 200 }}
