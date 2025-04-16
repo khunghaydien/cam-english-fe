@@ -11,7 +11,7 @@ import {
 } from "antd";
 import React, { useState } from "react";
 import { UploadFile as AntdUploadFile } from "antd/es/upload/interface";
-import { UploadFile } from "@/component/ui/upload-file";
+import { ButtonUpload } from "@/component/ui/button";
 import { Worker, Viewer } from "@react-pdf-viewer/core";
 import "@react-pdf-viewer/core/lib/styles/index.css";
 
@@ -98,7 +98,7 @@ const Page = () => {
                 children: (
                   <>
                     <Row justify="center" className="mb-4">
-                      <UploadFile isDragger={false} accept=".mp3,.wav" />
+                      <ButtonUpload isDragger={false} accept=".mp3,.wav" />
                     </Row>
                     <Row gutter={[16, 16]}>
                       <Col span={12} className="h-[calc(100vh-273px)]">
@@ -111,15 +111,14 @@ const Page = () => {
                             </Worker>
                           </div>
                         ) : (
-                          <UploadFile
+                          <ButtonUpload
                             isDragger={true}
                             accept=".pdf"
                             onChange={(info) => handleFileUpload(info.file)}
                           />
                         )}
                       </Col>
-                      <Col span={12}>
-                      </Col>
+                      <Col span={12}></Col>
                     </Row>
                   </>
                 ),
